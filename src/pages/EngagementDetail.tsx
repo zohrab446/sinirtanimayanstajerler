@@ -62,9 +62,10 @@ export default function EngagementDetail() {
     const { error } = await supabase.from("tasks").insert({
       engagement_id: id!, title: newTask.title, description: newTask.description,
       due_date: newTask.due_date || null, created_by: user!.id,
+      assigned_to: newTask.assigned_to !== "none" ? newTask.assigned_to : null,
     });
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
-    else { setNewTask({ title: "", description: "", due_date: "" }); setShowTaskForm(false); }
+    else { setNewTask({ title: "", description: "", due_date: "", assigned_to: "none" }); setShowTaskForm(false); }
   };
 
   const updateTaskStatus = async (taskId: string, status: string) => {
