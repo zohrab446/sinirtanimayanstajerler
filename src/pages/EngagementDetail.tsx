@@ -23,7 +23,7 @@ export default function EngagementDetail() {
   const [eng, setEng] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
-  const [newTask, setNewTask] = useState({ title: "", description: "", due_date: "" });
+  const [newTask, setNewTask] = useState({ title: "", description: "", due_date: "", assigned_to: "none" });
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [msgInput, setMsgInput] = useState("");
   const msgEnd = useRef<HTMLDivElement>(null);
