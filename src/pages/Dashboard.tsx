@@ -75,6 +75,27 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
 
+        {engagements.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-xl font-semibold mb-4">Aktif Çalışmalarım ({engagements.length})</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              {engagements.map((e) => (
+                <Link key={e.id} to={`/engagements/${e.id}`}>
+                  <Card className="p-4 hover:border-primary transition-colors">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold">{e.projects?.title}</h3>
+                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                      </div>
+                      <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {role === "business" && (
           <>
             <div className="flex justify-between items-center mb-6">
