@@ -208,14 +208,18 @@ export default function Dashboard() {
             <div className="space-y-4">
               {projects.length === 0 && <Card className="p-8 text-center text-muted-foreground"><Briefcase className="w-10 h-10 mx-auto mb-2" />Henüz proje yok</Card>}
               {projects.map((p) => (
-                <Card key={p.id} className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-bold text-lg">{p.title}</h3>
-                      <p className="text-sm text-muted-foreground">{p.category} · {p.country} · {p.duration_weeks}h</p>
+                <Card key={p.id} className="overflow-hidden">
+                  {(p as any).cover_url && (
+                    <img src={(p as any).cover_url} alt={p.title} className="w-full h-40 object-cover" />
+                  )}
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-bold text-lg">{p.title}</h3>
+                        <p className="text-sm text-muted-foreground">{p.category} · {p.country} · {p.duration_weeks}h</p>
+                      </div>
+                      <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
                     </div>
-                    <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
-                  </div>
                   <div className="border-t pt-3 mt-3">
                     <p className="text-sm font-semibold mb-2">Başvurular ({p.applications?.length || 0})</p>
                     {p.applications?.length === 0 && <p className="text-xs text-muted-foreground">Henüz başvuru yok</p>}
