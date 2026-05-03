@@ -59,16 +59,23 @@ export default function StatsRow() {
 
   return (
     <div className="grid gap-4 sm:grid-cols-3 mb-8">
-      {stats.map((s) => {
+      {stats.map((s, i) => {
         const pct = s.total ? Math.round((s.value / s.total) * 100) : 0;
+        const gradients = [
+          "bg-gradient-to-br from-violet-500 to-fuchsia-500",
+          "bg-gradient-to-br from-amber-400 to-orange-500",
+          "bg-gradient-to-br from-cyan-400 to-teal-500",
+        ];
         return (
-          <Card key={s.label} className="p-5 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-semibold">{s.label}</p>
-              <p className="text-2xl font-bold mt-1">{s.value}<span className="text-sm text-muted-foreground font-normal">/{s.total}</span></p>
-              <p className="text-xs text-muted-foreground mt-1 truncate">{s.sub}</p>
+          <Card key={s.label} className={`p-5 flex items-center justify-between gap-3 text-white border-0 shadow-card overflow-hidden ${gradients[i]}`}>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-sm">{s.label}</p>
+              <p className="text-3xl font-bold mt-1 leading-none">{s.value}<span className="text-sm text-white/70 font-normal">/{s.total}</span></p>
+              <p className="text-xs text-white/80 mt-2 truncate">{s.sub}</p>
             </div>
-            <Ring percent={pct} color={s.color} />
+            <div className="bg-white/15 rounded-full p-1 shrink-0">
+              <Ring percent={pct} color="white" />
+            </div>
           </Card>
         );
       })}
