@@ -48,7 +48,6 @@ export default function Onboarding() {
   useEffect(() => {
     if (!user) return;
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
-      if (data?.onboarded) { navigate("/dashboard"); return; }
       if (data) {
         setForm({
           full_name: data.full_name || "",
