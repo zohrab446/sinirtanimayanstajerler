@@ -175,6 +175,8 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
 
+        <StatsRow />
+
         {engagements.length > 0 && (
           <div className="mb-10">
             <h2 className="text-xl font-semibold mb-4">Aktif Çalışmalarım ({engagements.length})</h2>
