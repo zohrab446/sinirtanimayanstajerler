@@ -49,7 +49,8 @@ export default function Dashboard() {
   const [engagements, setEngagements] = useState<Engagement[]>([]);
   const [openEngagements, setOpenEngagements] = useState<Engagement[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
+  const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
+  const [mentors, setMentors] = useState<{ id: string; full_name: string | null }[]>([]);
 
   useEffect(() => {
     if (loading) return;
