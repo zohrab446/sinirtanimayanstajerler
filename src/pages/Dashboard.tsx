@@ -194,6 +194,12 @@ export default function Dashboard() {
                       ))}
                     </select>
                   </div>
+                  <div>
+                    <Label>Kapak Fotoğrafı</Label>
+                    {form.cover_url && <img src={form.cover_url} alt="" className="w-full h-32 object-cover rounded-md mb-2" />}
+                    <Input type="file" accept="image/*" disabled={coverUploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadCover(f); }} />
+                    {coverUploading && <p className="text-xs text-muted-foreground mt-1">Yükleniyor...</p>}
+                  </div>
                   <Button type="submit">Oluştur</Button>
                 </form>
               </Card>
