@@ -40,6 +40,7 @@ const App = () => (
             <Route path="/workspaces" element={<Workspaces />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/certificates" element={<Certificates />} />
+            <Route path="/live" element={<LiveRoom />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
