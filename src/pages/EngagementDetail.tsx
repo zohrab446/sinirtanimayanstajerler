@@ -150,7 +150,7 @@ export default function EngagementDetail() {
             </div>
             <div className="text-right">
               <Badge variant={eng.status === "active" ? "default" : "secondary"}>{eng.status}</Badge>
-              {eng.status === "active" && user?.id === eng.business_id && (
+              {eng.status === "active" && (user?.id === eng.business_id || user?.id === eng.mentor_id) && (
                 <Button size="sm" variant="outline" className="block mt-2" onClick={completeEngagement}>Tamamla</Button>
               )}
             </div>
