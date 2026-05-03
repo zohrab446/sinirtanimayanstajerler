@@ -159,7 +159,7 @@ export default function Dashboard() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/40">
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-violet-50 via-pink-50/40 to-cyan-50/40">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <AppHeader />
