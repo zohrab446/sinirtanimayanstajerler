@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Briefcase } from "lucide-react";
+import { countryFlag } from "@/lib/flag";
 
 type Application = {
   id: string;
@@ -146,7 +147,7 @@ export default function Dashboard() {
                     <div className="flex justify-between items-start gap-3">
                       <div>
                         <h3 className="font-semibold">{e.projects?.title}</h3>
-                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
@@ -216,7 +217,7 @@ export default function Dashboard() {
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <h3 className="font-bold text-lg">{p.title}</h3>
-                        <p className="text-sm text-muted-foreground">{p.category} · {p.country} · {p.duration_weeks}h</p>
+                        <p className="text-sm text-muted-foreground">{p.category} · {countryFlag(p.country)} {p.country} · {p.duration_weeks}h</p>
                       </div>
                       <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
                     </div>
@@ -270,7 +271,7 @@ export default function Dashboard() {
                   <Card key={a.id} className="p-5 flex justify-between items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold">{a.projects?.title}</h3>
-                      <p className="text-xs text-muted-foreground">{a.projects?.category} · {a.projects?.country}</p>
+                      <p className="text-xs text-muted-foreground">{a.projects?.category} · {countryFlag(a.projects?.country)} {a.projects?.country}</p>
                     </div>
                     <Badge variant={a.status === "accepted" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>{a.status}</Badge>
                     {a.status === "accepted" && relatedEngagement && (
@@ -295,7 +296,7 @@ export default function Dashboard() {
               <Card key={e.id} className="p-5 flex justify-between items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold">{e.projects?.title}</h3>
-                  <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                  <p className="text-xs text-muted-foreground">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
                 </div>
                 <Button
                   size="sm"

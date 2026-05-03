@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Plus, Send, Upload, Check, X, FileText, Award } from "lucide-react";
 import jsPDF from "jspdf";
+import { countryFlag } from "@/lib/flag";
 
 const STATUSES = ["todo", "in_progress", "submitted", "done"] as const;
 const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", submitted: "Onay bekliyor", done: "Tamamlandı" };
@@ -177,7 +178,7 @@ export default function EngagementDetail() {
           <div className="flex justify-between items-start gap-4">
             <div>
               <h1 className="text-2xl font-bold">{eng.projects?.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">{eng.projects?.category} · {eng.projects?.country}</p>
+              <p className="text-sm text-muted-foreground mt-1">{eng.projects?.category} · {countryFlag(eng.projects?.country)} {eng.projects?.country}</p>
               <div className="flex gap-4 mt-3 text-sm">
                 <span><strong>Öğrenci:</strong> {eng.student?.full_name}</span>
                 <span><strong>İşletme:</strong> {eng.business?.company_name || eng.business?.full_name}</span>
