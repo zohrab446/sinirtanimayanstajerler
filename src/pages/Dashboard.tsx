@@ -86,6 +86,26 @@ export default function Dashboard() {
   useEffect(() => { refresh(); }, [refresh]);
 
   useEffect(() => {
+    if (engagements.length === 0) { setUpcomingTasks([]); setRecentMessages([]); return; }
+    const ids = engagements.map((e) => e.id);
+    (async () => {
+      const { data: t } = await supabase.from("tasks")
+        .select("id, title, due_date, status, engagement_id")
+        .in("engagement_id", ids)
+        .neq("status", "done")
+        .order("due_date", { ascending: true, nullsFirst: false })
+        .limit(6);
+      setUpcomingTasks(t ?? []);
+      const { data: m } = await supabase.from("messages")
+        .select("id, body, created_at, engagement_id, sender:profiles!messages_sender_profiles_fkey(full_name)")
+        .in("engagement_id", ids)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      setRecentMessages(m ?? []);
+    })();
+  }, [engagements]);
+
+  useEffect(() => {
     if (role !== "business") return;
     (async () => {
       const { data: roleRows } = await supabase.from("user_roles").select("user_id").eq("role", "mentor");
