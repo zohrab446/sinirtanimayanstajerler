@@ -58,6 +58,7 @@ export default function Onboarding() {
           university: data.university || "",
           company_name: data.company_name || "",
           skills: (data.skills || []).join(", "),
+          avatar_url: data.avatar_url || "",
         });
       }
     });
