@@ -70,6 +70,10 @@ export default function Dashboard() {
     const col = role === "business" ? "business_id" : role === "mentor" ? "mentor_id" : "student_id";
     const { data: engs } = await supabase.from("engagements").select("*, projects(title, category, country)").eq(col, user.id).order("created_at", { ascending: false });
     setEngagements((engs ?? []) as Engagement[]);
+    if (role === "mentor") {
+      const { data: open } = await supabase.from("engagements").select("*, projects(title, category, country)").is("mentor_id", null).eq("status", "active").order("created_at", { ascending: false });
+      setOpenEngagements((open ?? []) as Engagement[]);
+    }
   }, [user, role]);
 
   useEffect(() => { refresh(); }, [refresh]);
