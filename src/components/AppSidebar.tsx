@@ -26,6 +26,7 @@ const mainItems = [
 const spaceItems = [
   { title: "Çalışmalarım", url: "/workspaces", icon: Briefcase, dot: "bg-pink-500" },
   { title: "Mesajlar", url: "/messages", icon: MessageSquare, dot: "bg-blue-500" },
+  { title: "Canlı Yayın Odası", url: "/live", icon: Video, dot: "bg-red-500" },
   { title: "Sertifikalar", url: "/certificates", icon: Award, dot: "bg-amber-500" },
 ];
 
