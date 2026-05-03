@@ -11,10 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, Send } from "lucide-react";
+import { ArrowLeft, Plus, Send, Upload, Check, X, FileText } from "lucide-react";
 
-const STATUSES = ["todo", "in_progress", "review", "done"] as const;
-const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", review: "İncelemede", done: "Tamamlandı" };
+const STATUSES = ["todo", "in_progress", "submitted", "done"] as const;
+const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", submitted: "Onay bekliyor", done: "Tamamlandı" };
 
 export default function EngagementDetail() {
   const { id } = useParams();
@@ -79,6 +79,33 @@ export default function EngagementDetail() {
       .eq("id", taskId);
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
     else toast({ title: "Görev atandı" });
+  };
+
+  const uploadSubmission = async (taskId: string, file: File) => {
+    const path = `${id}/${taskId}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await supabase.storage.from("task-submissions").upload(path, file, { upsert: true });
+    if (upErr) { toast({ title: "Yükleme hatası", description: upErr.message, variant: "destructive" }); return; }
+    const { error } = await supabase.from("tasks").update({
+      submission_url: path, submission_filename: file.name,
+      submitted_at: new Date().toISOString(), submitted_by: user!.id,
+      status: "submitted",
+    }).eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: "Dosya gönderildi, onay bekleniyor" });
+  };
+
+  const downloadSubmission = async (path: string, filename: string) => {
+    const { data, error } = await supabase.storage.from("task-submissions").createSignedUrl(path, 60);
+    if (error || !data) { toast({ title: "Hata", description: error?.message, variant: "destructive" }); return; }
+    window.open(data.signedUrl, "_blank");
+  };
+
+  const reviewTask = async (taskId: string, approve: boolean) => {
+    const { error } = await supabase.from("tasks")
+      .update({ status: approve ? "done" : "in_progress" })
+      .eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: approve ? "Görev onaylandı" : "Görev reddedildi, revizyon istendi" });
   };
 
   const assigneeOptions = eng ? [
@@ -165,12 +192,22 @@ export default function EngagementDetail() {
                 <div key={s}>
                   <h4 className="text-sm font-semibold mb-2">{STATUS_LABEL[s]}</h4>
                   <div className="space-y-2 min-h-[100px]">
-                    {tasks.filter((t) => t.status === s).map((t) => (
+                    {tasks.filter((t) => t.status === s).map((t) => {
+                      const isStudent = user?.id === eng.student_id;
+                      const isBusiness = user?.id === eng.business_id;
+                      const canSubmit = isStudent && (t.status === "todo" || t.status === "in_progress");
+                      const canReview = isBusiness && t.status === "submitted";
+                      return (
                       <Card key={t.id} className="p-3">
                         <p className="font-medium text-sm">{t.title}</p>
                         {t.description && <p className="text-xs text-muted-foreground mt-1">{t.description}</p>}
                         {t.due_date && <p className="text-xs text-muted-foreground mt-1">📅 {t.due_date}</p>}
                         {t.assigned?.full_name && <p className="text-xs text-muted-foreground mt-1">👤 {t.assigned.full_name}</p>}
+                        {t.submission_url && (
+                          <button type="button" onClick={() => downloadSubmission(t.submission_url, t.submission_filename)} className="mt-2 flex items-center gap-1 text-xs text-primary hover:underline">
+                            <FileText className="w-3 h-3" />{t.submission_filename || "Dosya"}
+                          </button>
+                        )}
                         <Select value={t.status} onValueChange={(v) => updateTaskStatus(t.id, v)}>
                           <SelectTrigger className="h-7 text-xs mt-2"><SelectValue /></SelectTrigger>
                           <SelectContent className="bg-popover z-50">
@@ -186,8 +223,21 @@ export default function EngagementDetail() {
                             ))}
                           </SelectContent>
                         </Select>
+                        {canSubmit && (
+                          <label className="mt-2 flex items-center justify-center gap-1 text-xs border border-dashed rounded px-2 py-1.5 cursor-pointer hover:bg-accent">
+                            <Upload className="w-3 h-3" />{t.submission_url ? "Yeni dosya yükle" : "Dosya yükle & gönder"}
+                            <input type="file" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadSubmission(t.id, f); e.target.value = ""; }} />
+                          </label>
+                        )}
+                        {canReview && (
+                          <div className="mt-2 flex gap-1">
+                            <Button size="sm" variant="default" className="flex-1 h-7 text-xs" onClick={() => reviewTask(t.id, true)}><Check className="w-3 h-3" />Onayla</Button>
+                            <Button size="sm" variant="outline" className="flex-1 h-7 text-xs" onClick={() => reviewTask(t.id, false)}><X className="w-3 h-3" />Reddet</Button>
+                          </div>
+                        )}
                       </Card>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}
