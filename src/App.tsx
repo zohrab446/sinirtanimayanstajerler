@@ -11,6 +11,9 @@ import ProjectDetail from "./pages/ProjectDetail.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Onboarding from "./pages/Onboarding.tsx";
 import EngagementDetail from "./pages/EngagementDetail.tsx";
+import Workspaces from "./pages/Workspaces.tsx";
+import Messages from "./pages/Messages.tsx";
+import Certificates from "./pages/Certificates.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 
