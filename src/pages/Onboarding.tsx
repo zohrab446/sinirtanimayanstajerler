@@ -125,6 +125,16 @@ export default function Onboarding() {
 
         <Card className="p-6 shadow-card">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label>Profil Fotoğrafı</Label>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="w-20 h-20 rounded-full bg-secondary border overflow-hidden flex items-center justify-center text-2xl text-muted-foreground">
+                  {form.avatar_url ? <img src={form.avatar_url} alt="" className="w-full h-full object-cover" /> : "👤"}
+                </div>
+                <Input type="file" accept="image/*" disabled={avatarUploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadAvatar(f); }} />
+              </div>
+              {avatarUploading && <p className="text-xs text-muted-foreground mt-1">Yükleniyor...</p>}
+            </div>
             <div><Label>Ad Soyad *</Label><Input required maxLength={100} value={form.full_name} onChange={set("full_name")} /></div>
 
             <div className="grid grid-cols-2 gap-4">
