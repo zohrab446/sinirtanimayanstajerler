@@ -53,6 +53,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel>Panel</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
               {mainItems.map((item) => (
@@ -70,7 +71,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel>Spaces</SidebarGroupLabel>}
+          {!collapsed && <SidebarGroupLabel>Alanlarım</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
               {spaceItems.map((item) => (
