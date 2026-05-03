@@ -37,6 +37,9 @@ export default function Dashboard() {
       const { data } = await supabase.from("applications").select("*, projects(title, category, country)").eq("student_id", user.id).order("created_at", { ascending: false });
       setApplications(data ?? []);
     }
+    const col = role === "business" ? "business_id" : role === "mentor" ? "mentor_id" : "student_id";
+    const { data: engs } = await supabase.from("engagements").select("*, projects(title, category, country)").eq(col, user.id).order("created_at", { ascending: false });
+    setEngagements(engs ?? []);
   };
 
   useEffect(() => { refresh(); }, [user, role]);
