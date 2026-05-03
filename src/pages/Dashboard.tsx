@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AppHeader from "@/components/AppHeader";
 import { AppSidebar } from "@/components/AppSidebar";
+import ActivityHeatmap from "@/components/ActivityHeatmap";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
