@@ -11,7 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, Send, Upload, Check, X, FileText } from "lucide-react";
+import { ArrowLeft, Plus, Send, Upload, Check, X, FileText, Award } from "lucide-react";
+import jsPDF from "jspdf";
 
 const STATUSES = ["todo", "in_progress", "submitted", "done"] as const;
 const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", submitted: "Onay bekliyor", done: "Tamamlandı" };
@@ -130,6 +131,40 @@ export default function EngagementDetail() {
     loadAll();
   };
 
+  const generateCertificate = () => {
+    const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+    const w = doc.internal.pageSize.getWidth();
+    const h = doc.internal.pageSize.getHeight();
+    // Border
+    doc.setDrawColor(40, 80, 160); doc.setLineWidth(6); doc.rect(20, 20, w - 40, h - 40);
+    doc.setLineWidth(1); doc.rect(34, 34, w - 68, h - 68);
+    // Title
+    doc.setFont("helvetica", "bold"); doc.setFontSize(36); doc.setTextColor(30, 30, 80);
+    doc.text("BAŞARI SERTİFİKASI", w / 2, 130, { align: "center" });
+    doc.setFont("helvetica", "normal"); doc.setFontSize(14); doc.setTextColor(80);
+    doc.text("Bu sertifika aşağıdaki kişinin projeyi başarıyla tamamladığını onaylar", w / 2, 165, { align: "center" });
+    // Name
+    doc.setFont("helvetica", "bold"); doc.setFontSize(30); doc.setTextColor(20);
+    doc.text(eng.student?.full_name || "Öğrenci", w / 2, 230, { align: "center" });
+    // Project
+    doc.setFont("helvetica", "normal"); doc.setFontSize(14); doc.setTextColor(60);
+    doc.text("Proje:", w / 2, 270, { align: "center" });
+    doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30);
+    doc.text(eng.projects?.title || "", w / 2, 300, { align: "center" });
+    // Business
+    doc.setFont("helvetica", "normal"); doc.setFontSize(13); doc.setTextColor(80);
+    doc.text(`İşletme: ${eng.business?.company_name || eng.business?.full_name || "-"}`, w / 2, 340, { align: "center" });
+    const completed = tasks.filter((t) => t.status === "done").length;
+    doc.text(`Tamamlanan görev: ${completed} / ${tasks.length}`, w / 2, 360, { align: "center" });
+    // Date
+    const dateStr = new Date(eng.end_date || Date.now()).toLocaleDateString("tr-TR");
+    doc.text(`Tarih: ${dateStr}`, w / 2, 380, { align: "center" });
+    // Signature
+    doc.setLineWidth(0.5); doc.line(w / 2 - 100, h - 90, w / 2 + 100, h - 90);
+    doc.setFontSize(11); doc.text("Lovable Platform", w / 2, h - 75, { align: "center" });
+    doc.save(`sertifika-${(eng.student?.full_name || "ogrenci").replace(/\s+/g, "_")}.pdf`);
+  };
+
   if (!eng) return <div className="min-h-screen bg-background"><AppHeader /><div className="container py-12 text-center text-muted-foreground">Yükleniyor...</div></div>;
 
   return (
@@ -152,6 +187,11 @@ export default function EngagementDetail() {
               <Badge variant={eng.status === "active" ? "default" : "secondary"}>{eng.status}</Badge>
               {eng.status === "active" && (user?.id === eng.business_id || user?.id === eng.mentor_id) && (
                 <Button size="sm" variant="outline" className="block mt-2" onClick={completeEngagement}>Tamamla</Button>
+              )}
+              {eng.status === "completed" && (
+                <Button size="sm" className="block mt-2 bg-gradient-primary" onClick={generateCertificate}>
+                  <Award className="w-4 h-4" />Sertifikayı İndir
+                </Button>
               )}
             </div>
           </div>
@@ -194,7 +234,14 @@ export default function EngagementDetail() {
                 <div key={s}>
                   <h4 className="text-sm font-semibold mb-2">{STATUS_LABEL[s]}</h4>
                   <div className="space-y-2 min-h-[100px]">
-                    {tasks.filter((t) => t.status === s).map((t) => {
+                    {tasks.filter((t) => t.status === s).filter((t) => {
+                      const isStudent = user?.id === eng.student_id;
+                      const isBusiness = user?.id === eng.business_id;
+                      const isMentor = user?.id === eng.mentor_id;
+                      if (isBusiness || isMentor) return true;
+                      if (isStudent) return t.assigned_to === user?.id || t.created_by === user?.id;
+                      return false;
+                    }).map((t) => {
                       const isStudent = user?.id === eng.student_id;
                       const isBusiness = user?.id === eng.business_id;
                       const isMentor = user?.id === eng.mentor_id;
