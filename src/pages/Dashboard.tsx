@@ -47,6 +47,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
   const [engagements, setEngagements] = useState<Engagement[]>([]);
+  const [openEngagements, setOpenEngagements] = useState<Engagement[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
 
