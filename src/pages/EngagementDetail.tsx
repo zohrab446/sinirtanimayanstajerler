@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Plus, Send, Upload, Check, X, FileText, Award } from "lucide-react";
 import jsPDF from "jspdf";
+import { countryFlag } from "@/lib/flag";
 
 const STATUSES = ["todo", "in_progress", "submitted", "done"] as const;
 const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", submitted: "Onay bekliyor", done: "Tamamlandı" };
