@@ -173,8 +173,17 @@ export default function EngagementDetail() {
                         {t.assigned?.full_name && <p className="text-xs text-muted-foreground mt-1">👤 {t.assigned.full_name}</p>}
                         <Select value={t.status} onValueChange={(v) => updateTaskStatus(t.id, v)}>
                           <SelectTrigger className="h-7 text-xs mt-2"><SelectValue /></SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-popover z-50">
                             {STATUSES.map((st) => <SelectItem key={st} value={st}>{STATUS_LABEL[st]}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <Select value={t.assigned_to ?? "none"} onValueChange={(v) => updateTaskAssignee(t.id, v)}>
+                          <SelectTrigger className="h-7 text-xs mt-2"><SelectValue placeholder="Ata" /></SelectTrigger>
+                          <SelectContent className="bg-popover z-50">
+                            <SelectItem value="none">Atanmadı</SelectItem>
+                            {assigneeOptions.map((o) => (
+                              <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </Card>
