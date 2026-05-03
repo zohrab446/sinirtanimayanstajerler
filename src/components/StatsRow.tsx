@@ -68,15 +68,16 @@ export default function StatsRow() {
         ];
         return (
           <Card key={s.label} className={`p-5 text-white border-0 shadow-card overflow-hidden ${gradients[i]}`}>
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <p className="font-semibold text-sm leading-tight flex-1">{s.label}</p>
-              <Ring percent={pct} color="white" />
-            </div>
-            <p className="text-3xl font-bold leading-none">
+            <p className="font-semibold text-sm">{s.label}</p>
+            <p className="text-3xl font-bold leading-none mt-2">
               {s.value}
               <span className="text-base text-white/70 font-normal ml-0.5">/{s.total}</span>
             </p>
             <p className="text-xs text-white/85 mt-2">{s.sub}</p>
+            <div className="mt-4 flex items-center gap-3">
+              <Ring percent={pct} color="white" />
+              <span className="text-xs text-white/80">İlerleme</span>
+            </div>
           </Card>
         );
       })}
