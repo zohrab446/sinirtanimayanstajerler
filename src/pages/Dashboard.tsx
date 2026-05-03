@@ -86,11 +86,12 @@ export default function Dashboard() {
       title: form.title, description: form.description, category: form.category,
       skills_needed: form.skills.split(",").map(s => s.trim()).filter(Boolean),
       duration_weeks: Number(form.duration_weeks), country: form.country,
+      mentor_id: form.mentor_id || null,
     });
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
     else {
       toast({ title: "Proje oluşturuldu" });
-      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
+      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
       setShowForm(false); refresh();
     }
   };
