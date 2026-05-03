@@ -271,7 +271,7 @@ export default function Dashboard() {
                   <Card key={a.id} className="p-5 flex justify-between items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold">{a.projects?.title}</h3>
-                      <p className="text-xs text-muted-foreground">{a.projects?.category} · {a.projects?.country}</p>
+                      <p className="text-xs text-muted-foreground">{a.projects?.category} · {countryFlag(a.projects?.country)} {a.projects?.country}</p>
                     </div>
                     <Badge variant={a.status === "accepted" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>{a.status}</Badge>
                     {a.status === "accepted" && relatedEngagement && (
