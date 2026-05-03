@@ -6,18 +6,18 @@ import { Card } from "@/components/ui/card";
 type Stat = { label: string; value: number; total: number; color: string; sub: string };
 
 function Ring({ percent, color }: { percent: number; color: string }) {
-  const r = 26;
+  const r = 24;
   const c = 2 * Math.PI * r;
   const offset = c - (percent / 100) * c;
   return (
-    <svg width="64" height="64" viewBox="0 0 64 64" className="shrink-0">
-      <circle cx="32" cy="32" r={r} stroke="hsl(var(--muted))" strokeWidth="6" fill="none" />
+    <svg width="60" height="60" viewBox="0 0 60 60" className="shrink-0">
+      <circle cx="30" cy="30" r={r} stroke="rgba(255,255,255,0.25)" strokeWidth="5" fill="none" />
       <circle
-        cx="32" cy="32" r={r} stroke={color} strokeWidth="6" fill="none"
+        cx="30" cy="30" r={r} stroke={color} strokeWidth="5" fill="none"
         strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
-        transform="rotate(-90 32 32)"
+        transform="rotate(-90 30 30)"
       />
-      <text x="32" y="36" textAnchor="middle" className="fill-foreground" fontSize="13" fontWeight="600">
+      <text x="30" y="34" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">
         {percent}%
       </text>
     </svg>
@@ -59,16 +59,23 @@ export default function StatsRow() {
 
   return (
     <div className="grid gap-4 sm:grid-cols-3 mb-8">
-      {stats.map((s) => {
+      {stats.map((s, i) => {
         const pct = s.total ? Math.round((s.value / s.total) * 100) : 0;
+        const gradients = [
+          "bg-gradient-to-br from-violet-500 to-fuchsia-500",
+          "bg-gradient-to-br from-amber-400 to-orange-500",
+          "bg-gradient-to-br from-cyan-400 to-teal-500",
+        ];
         return (
-          <Card key={s.label} className="p-5 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-semibold">{s.label}</p>
-              <p className="text-2xl font-bold mt-1">{s.value}<span className="text-sm text-muted-foreground font-normal">/{s.total}</span></p>
-              <p className="text-xs text-muted-foreground mt-1 truncate">{s.sub}</p>
+          <Card key={s.label} className={`p-5 flex items-center justify-between gap-3 text-white border-0 shadow-card overflow-hidden ${gradients[i]}`}>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-sm">{s.label}</p>
+              <p className="text-3xl font-bold mt-1 leading-none">{s.value}<span className="text-sm text-white/70 font-normal">/{s.total}</span></p>
+              <p className="text-xs text-white/80 mt-2 truncate">{s.sub}</p>
             </div>
-            <Ring percent={pct} color={s.color} />
+            <div className="bg-white/15 rounded-full p-1 shrink-0">
+              <Ring percent={pct} color="white" />
+            </div>
           </Card>
         );
       })}
