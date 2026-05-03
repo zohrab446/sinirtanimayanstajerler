@@ -60,7 +60,7 @@ export default function Dashboard() {
   const refresh = useCallback(async () => {
     if (!user || !role) return;
     if (role === "business") {
-      const { data } = await supabase.from("projects").select("*, applications(id, status, student_id, cover_letter, profiles:student_id(full_name, university))").eq("business_id", user.id).order("created_at", { ascending: false });
+      const { data } = await supabase.from("projects").select("*, applications(id, project_id, status, student_id, cover_letter, profiles:student_id(full_name, university))").eq("business_id", user.id).order("created_at", { ascending: false });
       setProjects((data ?? []) as Project[]);
     } else if (role === "student") {
       const { data } = await supabase.from("applications").select("*, projects(title, category, country)").eq("student_id", user.id).order("created_at", { ascending: false });
