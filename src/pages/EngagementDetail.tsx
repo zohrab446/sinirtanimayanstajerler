@@ -199,9 +199,10 @@ export default function EngagementDetail() {
         </Card>
 
         <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="tasks">Görevler ({tasks.length})</TabsTrigger>
             <TabsTrigger value="chat">Mesajlar ({messages.length})</TabsTrigger>
+            <TabsTrigger value="live">Canlı Yayın</TabsTrigger>
           </TabsList>
 
           <TabsContent value="tasks" className="space-y-4">
