@@ -136,21 +136,29 @@ export default function Dashboard() {
                     <p className="text-sm font-semibold mb-2">Başvurular ({p.applications?.length || 0})</p>
                     {p.applications?.length === 0 && <p className="text-xs text-muted-foreground">Henüz başvuru yok</p>}
                     <div className="space-y-2">
-                      {p.applications?.map((a: any) => (
-                        <div key={a.id} className="flex justify-between items-center gap-2 p-3 bg-secondary/40 rounded-md">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium">{a.profiles?.full_name || "Öğrenci"}</p>
-                            <p className="text-xs text-muted-foreground truncate">{a.cover_letter || "-"}</p>
-                          </div>
-                          <Badge variant="outline">{a.status}</Badge>
-                          {a.status === "pending" && (
-                            <div className="flex gap-1">
-                              <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "accepted")}>✓</Button>
-                              <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "rejected")}>✕</Button>
+                      {p.applications?.map((a: any) => {
+                        const relatedEngagement = engagements.find((e) => e.application_id === a.id);
+                        return (
+                          <div key={a.id} className="flex justify-between items-center gap-2 p-3 bg-secondary/40 rounded-md">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium">{a.profiles?.full_name || "Öğrenci"}</p>
+                              <p className="text-xs text-muted-foreground truncate">{a.cover_letter || "-"}</p>
                             </div>
-                          )}
-                        </div>
-                      ))}
+                            <Badge variant="outline">{a.status}</Badge>
+                            {a.status === "pending" && (
+                              <div className="flex gap-1">
+                                <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "accepted")}>✓</Button>
+                                <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "rejected")}>✕</Button>
+                              </div>
+                            )}
+                            {a.status === "accepted" && relatedEngagement && (
+                              <Link to={`/engagements/${relatedEngagement.id}`}>
+                                <Button size="sm" variant="outline">Görev Ata</Button>
+                              </Link>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </Card>
