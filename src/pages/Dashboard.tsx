@@ -217,7 +217,7 @@ export default function Dashboard() {
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <h3 className="font-bold text-lg">{p.title}</h3>
-                        <p className="text-sm text-muted-foreground">{p.category} · {p.country} · {p.duration_weeks}h</p>
+                        <p className="text-sm text-muted-foreground">{p.category} · {countryFlag(p.country)} {p.country} · {p.duration_weeks}h</p>
                       </div>
                       <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
                     </div>
