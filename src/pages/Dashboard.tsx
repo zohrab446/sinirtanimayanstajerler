@@ -296,7 +296,7 @@ export default function Dashboard() {
               <Card key={e.id} className="p-5 flex justify-between items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold">{e.projects?.title}</h3>
-                  <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                  <p className="text-xs text-muted-foreground">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
                 </div>
                 <Button
                   size="sm"
