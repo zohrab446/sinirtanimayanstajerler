@@ -20,7 +20,11 @@ export default function Auth() {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<"student" | "business" | "mentor">("student");
 
-  useEffect(() => { if (user) navigate("/dashboard"); }, [user, navigate]);
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("onboarded").eq("id", user.id).maybeSingle()
+      .then(({ data }) => navigate(data?.onboarded ? "/dashboard" : "/onboarding"));
+  }, [user, navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +38,7 @@ export default function Auth() {
     });
     setLoading(false);
     if (error) toast({ title: "Kayıt başarısız", description: error.message, variant: "destructive" });
-    else { toast({ title: "Hoş geldin!", description: "Hesabın oluşturuldu." }); navigate("/dashboard"); }
+    else { toast({ title: "Hoş geldin!", description: "Profilini tamamla." }); navigate("/onboarding"); }
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
