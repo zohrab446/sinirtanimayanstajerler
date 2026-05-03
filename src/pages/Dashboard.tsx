@@ -49,7 +49,8 @@ export default function Dashboard() {
   const [engagements, setEngagements] = useState<Engagement[]>([]);
   const [openEngagements, setOpenEngagements] = useState<Engagement[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
+  const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
+  const [mentors, setMentors] = useState<{ id: string; full_name: string | null }[]>([]);
 
   useEffect(() => {
     if (loading) return;
@@ -78,6 +79,17 @@ export default function Dashboard() {
 
   useEffect(() => { refresh(); }, [refresh]);
 
+  useEffect(() => {
+    if (role !== "business") return;
+    (async () => {
+      const { data: roleRows } = await supabase.from("user_roles").select("user_id").eq("role", "mentor");
+      const ids = (roleRows ?? []).map((r: any) => r.user_id);
+      if (ids.length === 0) { setMentors([]); return; }
+      const { data: profs } = await supabase.from("profiles").select("id, full_name").in("id", ids);
+      setMentors((profs ?? []) as any);
+    })();
+  }, [role]);
+
   const createProject = async (e: React.FormEvent) => {
     e.preventDefault();
     const { error } = await supabase.from("projects").insert({
@@ -85,11 +97,12 @@ export default function Dashboard() {
       title: form.title, description: form.description, category: form.category,
       skills_needed: form.skills.split(",").map(s => s.trim()).filter(Boolean),
       duration_weeks: Number(form.duration_weeks), country: form.country,
+      mentor_id: form.mentor_id || null,
     });
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
     else {
       toast({ title: "Proje oluşturuldu" });
-      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
+      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
       setShowForm(false); refresh();
     }
   };
@@ -152,6 +165,19 @@ export default function Dashboard() {
                   <div className="grid grid-cols-2 gap-4">
                     <div><Label>Yetkinlikler (virgülle)</Label><Input placeholder="React, SEO" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} /></div>
                     <div><Label>Süre (hafta)</Label><Input type="number" min={1} value={form.duration_weeks} onChange={(e) => setForm({ ...form, duration_weeks: Number(e.target.value) })} /></div>
+                  </div>
+                  <div>
+                    <Label>Mentor</Label>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      value={form.mentor_id}
+                      onChange={(e) => setForm({ ...form, mentor_id: e.target.value })}
+                    >
+                      <option value="">Mentor seçilmedi (sonra atanabilir)</option>
+                      {mentors.map((m) => (
+                        <option key={m.id} value={m.id}>{m.full_name || m.id.slice(0, 8)}</option>
+                      ))}
+                    </select>
                   </div>
                   <Button type="submit">Oluştur</Button>
                 </form>
