@@ -69,8 +69,23 @@ export default function EngagementDetail() {
   };
 
   const updateTaskStatus = async (taskId: string, status: string) => {
-    await supabase.from("tasks").update({ status }).eq("id", taskId);
+    const { error } = await supabase.from("tasks").update({ status }).eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
   };
+
+  const updateTaskAssignee = async (taskId: string, assigned_to: string) => {
+    const { error } = await supabase.from("tasks")
+      .update({ assigned_to: assigned_to === "none" ? null : assigned_to })
+      .eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: "Görev atandı" });
+  };
+
+  const assigneeOptions = eng ? [
+    { id: eng.student_id, label: `👨‍🎓 ${eng.student?.full_name || "Öğrenci"}` },
+    { id: eng.business_id, label: `🏢 ${eng.business?.company_name || eng.business?.full_name || "İşletme"}` },
+    ...(eng.mentor_id ? [{ id: eng.mentor_id, label: `🎓 Mentor` }] : []),
+  ] : [];
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
