@@ -103,15 +103,6 @@ export function AppSidebar() {
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
-        {!collapsed ? (
-          <Button className="w-full bg-gradient-to-r from-primary to-blue-500 text-white">
-            + Yeni Alan
-          </Button>
-        ) : (
-          <Button size="icon" className="w-full bg-gradient-to-r from-primary to-blue-500 text-white">
-            +
-          </Button>
-        )}
       </SidebarFooter>
     </Sidebar>
   );
