@@ -6,18 +6,18 @@ import { Card } from "@/components/ui/card";
 type Stat = { label: string; value: number; total: number; color: string; sub: string };
 
 function Ring({ percent, color }: { percent: number; color: string }) {
-  const r = 26;
+  const r = 22;
   const c = 2 * Math.PI * r;
   const offset = c - (percent / 100) * c;
   return (
-    <svg width="68" height="68" viewBox="0 0 68 68" className="shrink-0">
-      <circle cx="34" cy="34" r={r} stroke="rgba(255,255,255,0.25)" strokeWidth="5" fill="none" />
+    <svg width="56" height="56" viewBox="0 0 56 56" className="shrink-0">
+      <circle cx="28" cy="28" r={r} stroke="rgba(255,255,255,0.25)" strokeWidth="5" fill="none" />
       <circle
-        cx="34" cy="34" r={r} stroke={color} strokeWidth="5" fill="none"
+        cx="28" cy="28" r={r} stroke={color} strokeWidth="5" fill="none"
         strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
-        transform="rotate(-90 34 34)"
+        transform="rotate(-90 28 28)"
       />
-      <text x="34" y="38" textAnchor="middle" fill="white" fontSize="13" fontWeight="700">
+      <text x="28" y="32" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">
         {percent}%
       </text>
     </svg>
