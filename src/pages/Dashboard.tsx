@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import AppHeader from "@/components/AppHeader";
 import { AppSidebar } from "@/components/AppSidebar";
 import ActivityHeatmap from "@/components/ActivityHeatmap";
+import StatsRow from "@/components/StatsRow";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -173,6 +174,8 @@ export default function Dashboard() {
             <div className="min-w-0">
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
+
+        <StatsRow />
 
         {engagements.length > 0 && (
           <div className="mb-10">
