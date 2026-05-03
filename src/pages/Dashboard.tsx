@@ -163,7 +163,7 @@ export default function Dashboard() {
                     <p className="text-sm font-semibold mb-2">Başvurular ({p.applications?.length || 0})</p>
                     {p.applications?.length === 0 && <p className="text-xs text-muted-foreground">Henüz başvuru yok</p>}
                     <div className="space-y-2">
-                      {p.applications?.map((a: any) => {
+                      {p.applications?.map((a) => {
                         const relatedEngagement = engagements.find((e) => e.application_id === a.id);
                         return (
                           <div key={a.id} className="flex justify-between items-center gap-2 p-3 bg-secondary/40 rounded-md">
