@@ -157,19 +157,17 @@ export default function Dashboard() {
             <div className="grid gap-3 md:grid-cols-2">
               {engagements.map((e) => (
                 <Card key={e.id} className="p-4 hover:border-primary transition-colors">
-                    <div className="flex justify-between items-start gap-3">
-                      <div>
-                        <h3 className="font-semibold">{e.projects?.title}</h3>
-                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
-                        <Link to={`/engagements/${e.id}`}>
-                          <Button size="sm" variant="outline">Çalışmaya Git</Button>
-                        </Link>
-                      </div>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold leading-tight break-words">{e.projects?.title}</h3>
+                      <Badge variant={e.status === "active" ? "default" : "secondary"} className="shrink-0">{e.status}</Badge>
                     </div>
-                  </Card>
+                    <p className="text-xs text-muted-foreground break-words">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
+                    <Link to={`/engagements/${e.id}`} className="self-start">
+                      <Button size="sm" variant="outline">Çalışmaya Git</Button>
+                    </Link>
+                  </div>
+                </Card>
               ))}
             </div>
           </div>
