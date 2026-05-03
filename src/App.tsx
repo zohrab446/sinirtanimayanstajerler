@@ -14,6 +14,7 @@ import EngagementDetail from "./pages/EngagementDetail.tsx";
 import Workspaces from "./pages/Workspaces.tsx";
 import Messages from "./pages/Messages.tsx";
 import Certificates from "./pages/Certificates.tsx";
+import LiveRoom from "./pages/LiveRoom.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/workspaces" element={<Workspaces />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/certificates" element={<Certificates />} />
+            <Route path="/live" element={<LiveRoom />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

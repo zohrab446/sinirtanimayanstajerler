@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Briefcase, FolderKanban, Award, MessageSquare, Settings, Sparkles, Calendar, Activity, Bell, HelpCircle } from "lucide-react";
+import { Home, Briefcase, FolderKanban, Award, MessageSquare, Settings, Sparkles, Calendar, Activity, Bell, HelpCircle, Video } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const mainItems = [
-  { title: "Panel", url: "/dashboard", icon: Home },
+  { title: "Ana Sayfa", url: "/dashboard", icon: Home },
   { title: "Projeler", url: "/projects", icon: FolderKanban },
   { title: "Takvim", url: "/dashboard", icon: Calendar },
   { title: "Durumlar", url: "/dashboard", icon: Activity },
@@ -26,6 +26,7 @@ const mainItems = [
 const spaceItems = [
   { title: "Çalışmalarım", url: "/workspaces", icon: Briefcase, dot: "bg-pink-500" },
   { title: "Mesajlar", url: "/messages", icon: MessageSquare, dot: "bg-blue-500" },
+  { title: "Canlı Yayın Odası", url: "/live", icon: Video, dot: "bg-red-500" },
   { title: "Sertifikalar", url: "/certificates", icon: Award, dot: "bg-amber-500" },
 ];
 
