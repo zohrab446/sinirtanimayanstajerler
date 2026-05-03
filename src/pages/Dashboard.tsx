@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AppHeader from "@/components/AppHeader";
+import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Briefcase } from "lucide-react";
+import { Plus, Briefcase, Search, Crown } from "lucide-react";
 import { countryFlag } from "@/lib/flag";
 
 type Application = {
@@ -132,9 +134,20 @@ export default function Dashboard() {
   if (loading || !user) return <div className="min-h-screen bg-background"><AppHeader /></div>;
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <main className="container py-8">
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/40">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <AppHeader />
+          <div className="flex items-center gap-3 px-6 py-3 border-b bg-background/60 backdrop-blur">
+            <SidebarTrigger />
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder="Ara..." className="pl-9 bg-secondary/50 border-0" />
+            </div>
+          </div>
+          <main className="flex-1 p-6 lg:grid lg:grid-cols-[1fr_320px] lg:gap-6">
+            <div className="min-w-0">
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
 
@@ -313,7 +326,24 @@ export default function Dashboard() {
             ))}
           </div>
         )}
-      </main>
-    </div>
+            </div>
+            <aside className="hidden lg:block space-y-4">
+              <Card className="p-5 bg-gradient-to-br from-purple-500 via-violet-500 to-indigo-500 text-white border-0 shadow-lg">
+                <div className="flex flex-col items-center text-center">
+                  <Crown className="w-12 h-12 mb-3 text-amber-200" />
+                  <h3 className="font-semibold mb-1">Daha iyi bir çalışma alanı</h3>
+                  <p className="text-xs text-white/80 mb-4">Pro ile sınırsız proje, mentor ve sertifika</p>
+                  <Button variant="secondary" className="w-full bg-white text-purple-700 hover:bg-white/90">Şimdi Yükselt</Button>
+                </div>
+              </Card>
+              <Card className="p-5">
+                <h3 className="font-semibold mb-3 text-sm">Ajanda</h3>
+                <p className="text-xs text-muted-foreground">Yaklaşan görev ve toplantılar burada görünecek.</p>
+              </Card>
+            </aside>
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 }
