@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Clock, MapPin } from "lucide-react";
+import { countryFlag } from "@/lib/flag";
 
 interface Project {
   id: string; title: string; description: string; category: string | null;
