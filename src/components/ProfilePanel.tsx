@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
+import { Camera, Loader2 } from "lucide-react";
 
 type Profile = {
   id: string;
@@ -22,10 +24,33 @@ function Avatar({ url, name, size = "lg" }: { url?: string | null; name?: string
   );
 }
 
+
 export default function ProfilePanel() {
   const { user, role } = useAuth();
   const [me, setMe] = useState<Profile | null>(null);
   const [partner, setPartner] = useState<{ profile: Profile; label: string } | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarUpload = async (file: File) => {
+    if (!user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Dosya çok büyük", description: "Maksimum 5MB", variant: "destructive" });
+      return;
+    }
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) { toast({ title: "Yükleme hatası", description: upErr.message, variant: "destructive" }); setUploading(false); return; }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    const { error: updErr } = await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", user.id);
+    if (updErr) { toast({ title: "Hata", description: updErr.message, variant: "destructive" }); setUploading(false); return; }
+    setMe((prev) => prev ? { ...prev, avatar_url: data.publicUrl } : prev);
+    toast({ title: "Profil fotoğrafı güncellendi" });
+    setUploading(false);
+  };
+
 
   useEffect(() => {
     if (!user) return;
@@ -65,7 +90,25 @@ export default function ProfilePanel() {
       {/* Sol üst — Öğrenci/Kullanıcı kartı */}
       <Card className="p-5 border-0 shadow-card text-white bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 overflow-hidden">
         <div className="flex items-center gap-4">
-          <Avatar url={me?.avatar_url} name={me?.full_name} size="xl" />
+          <div className="relative group">
+            <Avatar url={me?.avatar_url} name={me?.full_name} size="xl" />
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={uploading}
+              aria-label="Profil fotoğrafı yükle"
+              className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+            >
+              {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAvatarUpload(f); e.target.value = ""; }}
+            />
+          </div>
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-wider text-white/80">{role === "student" ? "Öğrenci" : role === "business" ? "İşletme" : "Mentor"}</p>
             <h2 className="text-lg font-bold truncate">{me?.full_name || "Kullanıcı"}</h2>
