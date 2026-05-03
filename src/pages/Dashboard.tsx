@@ -21,7 +21,10 @@ export default function Dashboard() {
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
 
   useEffect(() => {
-    if (!loading && !user) navigate("/auth");
+    if (loading) return;
+    if (!user) { navigate("/auth"); return; }
+    supabase.from("profiles").select("onboarded").eq("id", user.id).maybeSingle()
+      .then(({ data }) => { if (data && !data.onboarded) navigate("/onboarding"); });
   }, [user, loading, navigate]);
 
   const refresh = async () => {
