@@ -28,6 +28,7 @@ function Avatar({ url, name, size = "lg" }: { url?: string | null; name?: string
 export default function ProfilePanel() {
   const { user, role } = useAuth();
   const [me, setMe] = useState<Profile | null>(null);
+  const [partner, setPartner] = useState<{ profile: Profile; label: string } | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
