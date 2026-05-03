@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.create_engagement_on_accept() FROM PUBLIC, anon, authenticated;
