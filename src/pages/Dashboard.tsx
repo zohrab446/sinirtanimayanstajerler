@@ -17,6 +17,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [engagements, setEngagements] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
 
@@ -36,6 +37,9 @@ export default function Dashboard() {
       const { data } = await supabase.from("applications").select("*, projects(title, category, country)").eq("student_id", user.id).order("created_at", { ascending: false });
       setApplications(data ?? []);
     }
+    const col = role === "business" ? "business_id" : role === "mentor" ? "mentor_id" : "student_id";
+    const { data: engs } = await supabase.from("engagements").select("*, projects(title, category, country)").eq(col, user.id).order("created_at", { ascending: false });
+    setEngagements(engs ?? []);
   };
 
   useEffect(() => { refresh(); }, [user, role]);
@@ -70,6 +74,27 @@ export default function Dashboard() {
       <main className="container py-8">
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
+
+        {engagements.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-xl font-semibold mb-4">Aktif Çalışmalarım ({engagements.length})</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              {engagements.map((e) => (
+                <Link key={e.id} to={`/engagements/${e.id}`}>
+                  <Card className="p-4 hover:border-primary transition-colors">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold">{e.projects?.title}</h3>
+                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                      </div>
+                      <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {role === "business" && (
           <>

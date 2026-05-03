@@ -10,6 +10,7 @@ import Projects from "./pages/Projects.tsx";
 import ProjectDetail from "./pages/ProjectDetail.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Onboarding from "./pages/Onboarding.tsx";
+import EngagementDetail from "./pages/EngagementDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/engagements/:id" element={<EngagementDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
