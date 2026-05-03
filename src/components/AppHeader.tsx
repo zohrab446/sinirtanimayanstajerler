@@ -20,7 +20,9 @@ export default function AppHeader() {
           <Link to="/projects"><Button variant="ghost" size="sm">Projeler</Button></Link>
           {user ? (
             <>
-              <Link to="/dashboard"><Button variant="ghost" size="sm">Panel</Button></Link>
+              <Link to="/dashboard">
+                <Button variant="ghost" size="sm">{role === "student" ? "Başvurularım" : "Panel"}</Button>
+              </Link>
               {role && <span className="text-xs px-2 py-1 rounded bg-secondary text-muted-foreground capitalize">{role}</span>}
               <Button variant="outline" size="sm" onClick={async () => { await signOut(); navigate("/"); }}>
                 <LogOut className="w-4 h-4" />
