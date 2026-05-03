@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Briefcase, Search, Crown } from "lucide-react";
+import { Plus, Briefcase, Search } from "lucide-react";
 import { countryFlag } from "@/lib/flag";
 
 type Application = {
