@@ -48,7 +48,11 @@ export default function ProjectDetail() {
         <Link to="/projects" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="w-4 h-4" /> Tüm projeler
         </Link>
-        <Card className="p-8 shadow-card">
+        <Card className="overflow-hidden shadow-card">
+          {project.cover_url && (
+            <img src={project.cover_url} alt={project.title} className="w-full h-56 object-cover" />
+          )}
+          <div className="p-8">
           <div className="flex flex-wrap gap-2 mb-4">
             <Badge variant="secondary">{project.category || "Genel"}</Badge>
             <Badge variant="outline" className="flex items-center gap-1"><Clock className="w-3 h-3" />{project.duration_weeks} hafta</Badge>
