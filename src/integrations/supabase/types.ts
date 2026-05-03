@@ -227,6 +227,7 @@ export type Database = {
           description: string
           duration_weeks: number | null
           id: string
+          mentor_id: string | null
           skills_needed: string[] | null
           status: string
           title: string
@@ -240,6 +241,7 @@ export type Database = {
           description: string
           duration_weeks?: number | null
           id?: string
+          mentor_id?: string | null
           skills_needed?: string[] | null
           status?: string
           title: string
@@ -253,6 +255,7 @@ export type Database = {
           description?: string
           duration_weeks?: number | null
           id?: string
+          mentor_id?: string | null
           skills_needed?: string[] | null
           status?: string
           title?: string
