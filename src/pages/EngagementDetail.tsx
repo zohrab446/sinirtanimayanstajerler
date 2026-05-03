@@ -136,33 +136,124 @@ export default function EngagementDetail() {
     const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
     const w = doc.internal.pageSize.getWidth();
     const h = doc.internal.pageSize.getHeight();
-    // Border
-    doc.setDrawColor(40, 80, 160); doc.setLineWidth(6); doc.rect(20, 20, w - 40, h - 40);
-    doc.setLineWidth(1); doc.rect(34, 34, w - 68, h - 68);
+    const cx = w / 2;
+
+    // Background
+    doc.setFillColor(252, 250, 244);
+    doc.rect(0, 0, w, h, "F");
+
+    // Outer navy border
+    doc.setDrawColor(20, 40, 90);
+    doc.setLineWidth(10);
+    doc.rect(24, 24, w - 48, h - 48);
+
+    // Gold inner border
+    doc.setDrawColor(196, 161, 73);
+    doc.setLineWidth(2);
+    doc.rect(40, 40, w - 80, h - 80);
+    doc.setLineWidth(0.6);
+    doc.rect(46, 46, w - 92, h - 92);
+
+    // Corner ornaments (gold diamonds)
+    doc.setFillColor(196, 161, 73);
+    [[46, 46], [w - 46, 46], [46, h - 46], [w - 46, h - 46]].forEach(([x, y]) => {
+      doc.triangle(x - 8, y, x, y - 8, x + 8, y, "F");
+      doc.triangle(x - 8, y, x, y + 8, x + 8, y, "F");
+    });
+
+    // Top emblem
+    doc.setFillColor(20, 40, 90);
+    doc.circle(cx, 95, 22, "F");
+    doc.setFillColor(196, 161, 73);
+    doc.circle(cx, 95, 14, "F");
+    doc.setTextColor(20, 40, 90);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("★", cx, 101, { align: "center" });
+
     // Title
-    doc.setFont("helvetica", "bold"); doc.setFontSize(36); doc.setTextColor(30, 30, 80);
-    doc.text("BAŞARI SERTİFİKASI", w / 2, 130, { align: "center" });
-    doc.setFont("helvetica", "normal"); doc.setFontSize(14); doc.setTextColor(80);
-    doc.text("Bu sertifika aşağıdaki kişinin projeyi başarıyla tamamladığını onaylar", w / 2, 165, { align: "center" });
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(38);
+    doc.setTextColor(20, 40, 90);
+    doc.text("BAŞARI SERTİFİKASI", cx, 160, { align: "center" });
+
+    // Subtitle line
+    doc.setDrawColor(196, 161, 73);
+    doc.setLineWidth(1.2);
+    doc.line(cx - 110, 175, cx - 20, 175);
+    doc.line(cx + 20, 175, cx + 110, 175);
+    doc.setFillColor(196, 161, 73);
+    doc.circle(cx, 175, 2.5, "F");
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(13);
+    doc.setTextColor(90, 90, 90);
+    doc.text("Bu sertifika, aşağıda adı geçen kişinin projeyi", cx, 200, { align: "center" });
+    doc.text("başarıyla tamamladığını onaylar", cx, 218, { align: "center" });
+
     // Name
-    doc.setFont("helvetica", "bold"); doc.setFontSize(30); doc.setTextColor(20);
-    doc.text(eng.student?.full_name || "Öğrenci", w / 2, 230, { align: "center" });
+    doc.setFont("times", "bolditalic");
+    doc.setFontSize(36);
+    doc.setTextColor(20, 40, 90);
+    const name = eng.student?.full_name || "Öğrenci";
+    doc.text(name, cx, 270, { align: "center" });
+
+    // Underline under name
+    const nameWidth = doc.getTextWidth(name);
+    doc.setDrawColor(196, 161, 73);
+    doc.setLineWidth(0.8);
+    doc.line(cx - nameWidth / 2 - 20, 282, cx + nameWidth / 2 + 20, 282);
+
     // Project
-    doc.setFont("helvetica", "normal"); doc.setFontSize(14); doc.setTextColor(60);
-    doc.text("Proje:", w / 2, 270, { align: "center" });
-    doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30);
-    doc.text(eng.projects?.title || "", w / 2, 300, { align: "center" });
-    // Business
-    doc.setFont("helvetica", "normal"); doc.setFontSize(13); doc.setTextColor(80);
-    doc.text(`İşletme: ${eng.business?.company_name || eng.business?.full_name || "-"}`, w / 2, 340, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(110, 110, 110);
+    doc.text("PROJE", cx, 308, { align: "center" });
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(40, 40, 40);
+    const projectTitle = eng.projects?.title || "";
+    const projectLines = doc.splitTextToSize(projectTitle, w - 200);
+    doc.text(projectLines, cx, 330, { align: "center" });
+
+    // Stats
     const completed = tasks.filter((t) => t.status === "done").length;
-    doc.text(`Tamamlanan görev: ${completed} / ${tasks.length}`, w / 2, 360, { align: "center" });
-    // Date
-    const dateStr = new Date(eng.end_date || Date.now()).toLocaleDateString("tr-TR");
-    doc.text(`Tarih: ${dateStr}`, w / 2, 380, { align: "center" });
-    // Signature
-    doc.setLineWidth(0.5); doc.line(w / 2 - 100, h - 90, w / 2 + 100, h - 90);
-    doc.setFontSize(11); doc.text("Lovable Platform", w / 2, h - 75, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      `İşletme: ${eng.business?.company_name || eng.business?.full_name || "-"}    •    Tamamlanan Görev: ${completed} / ${tasks.length}`,
+      cx,
+      370,
+      { align: "center" }
+    );
+
+    // Footer signatures
+    const footerY = h - 90;
+    doc.setDrawColor(60, 60, 60);
+    doc.setLineWidth(0.5);
+    doc.line(90, footerY, 250, footerY);
+    doc.line(w - 250, footerY, w - 90, footerY);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(40, 40, 40);
+    doc.text("Tarih", 170, footerY + 16, { align: "center" });
+    doc.text("Platform", w - 170, footerY + 16, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(110, 110, 110);
+    const dateStr = new Date(eng.end_date || Date.now()).toLocaleDateString("tr-TR", { year: "numeric", month: "long", day: "numeric" });
+    doc.text(dateStr, 170, footerY + 30, { align: "center" });
+    doc.text("Lovable Platform", w - 170, footerY + 30, { align: "center" });
+
+    // Certificate ID
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Sertifika No: ${(eng.id || "").slice(0, 8).toUpperCase()}`, cx, h - 55, { align: "center" });
+
     doc.save(`sertifika-${(eng.student?.full_name || "ogrenci").replace(/\s+/g, "_")}.pdf`);
   };
 
