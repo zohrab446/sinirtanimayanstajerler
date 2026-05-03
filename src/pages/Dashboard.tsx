@@ -326,14 +326,6 @@ export default function Dashboard() {
         )}
             </div>
             <aside className="hidden lg:block space-y-4">
-              <Card className="p-5 bg-gradient-to-br from-purple-500 via-violet-500 to-indigo-500 text-white border-0 shadow-lg">
-                <div className="flex flex-col items-center text-center">
-                  <Crown className="w-12 h-12 mb-3 text-amber-200" />
-                  <h3 className="font-semibold mb-1">Daha iyi bir çalışma alanı</h3>
-                  <p className="text-xs text-white/80 mb-4">Pro ile sınırsız proje, mentor ve sertifika</p>
-                  <Button variant="secondary" className="w-full bg-white text-purple-700 hover:bg-white/90">Şimdi Yükselt</Button>
-                </div>
-              </Card>
               <Card className="p-5">
                 <h3 className="font-semibold mb-3 text-sm">Ajanda</h3>
                 <p className="text-xs text-muted-foreground">Yaklaşan görev ve toplantılar burada görünecek.</p>
