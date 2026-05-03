@@ -16,6 +16,7 @@ type Application = {
   id: string;
   status: string;
   student_id: string;
+  project_id: string;
   cover_letter: string | null;
   profiles?: { full_name: string | null; university?: string | null } | null;
   projects?: { title: string; category: string | null; country: string | null } | null;
@@ -35,6 +36,7 @@ type Project = {
 type Engagement = {
   id: string;
   application_id: string;
+  project_id: string;
   status: string;
   projects?: { title: string; category: string | null; country: string | null } | null;
 };
@@ -58,7 +60,7 @@ export default function Dashboard() {
   const refresh = useCallback(async () => {
     if (!user || !role) return;
     if (role === "business") {
-      const { data } = await supabase.from("projects").select("*, applications(id, status, student_id, cover_letter, profiles:student_id(full_name, university))").eq("business_id", user.id).order("created_at", { ascending: false });
+      const { data } = await supabase.from("projects").select("*, applications(id, project_id, status, student_id, cover_letter, profiles:student_id(full_name, university))").eq("business_id", user.id).order("created_at", { ascending: false });
       setProjects((data ?? []) as Project[]);
     } else if (role === "student") {
       const { data } = await supabase.from("applications").select("*, projects(title, category, country)").eq("student_id", user.id).order("created_at", { ascending: false });
@@ -107,17 +109,20 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold mb-4">Aktif Çalışmalarım ({engagements.length})</h2>
             <div className="grid gap-3 md:grid-cols-2">
               {engagements.map((e) => (
-                <Link key={e.id} to={`/engagements/${e.id}`}>
-                  <Card className="p-4 hover:border-primary transition-colors">
-                    <div className="flex justify-between items-start">
+                <Card key={e.id} className="p-4 hover:border-primary transition-colors">
+                    <div className="flex justify-between items-start gap-3">
                       <div>
                         <h3 className="font-semibold">{e.projects?.title}</h3>
                         <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
                       </div>
-                      <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
+                        <Link to={`/engagements/${e.id}`}>
+                          <Button size="sm" variant="outline">Çalışmaya Git</Button>
+                        </Link>
+                      </div>
                     </div>
                   </Card>
-                </Link>
               ))}
             </div>
           </div>
@@ -203,7 +208,7 @@ export default function Dashboard() {
             <div className="space-y-3">
               {applications.length === 0 && <Card className="p-8 text-center text-muted-foreground">Henüz başvuru yok. <Link to="/projects" className="text-primary underline">Projelere göz at</Link></Card>}
               {applications.map((a) => {
-                const relatedEngagement = engagements.find((e) => e.application_id === a.id);
+                const relatedEngagement = engagements.find((e) => e.application_id === a.id || e.project_id === a.project_id);
                 return (
                   <Card key={a.id} className="p-5 flex justify-between items-center gap-3">
                     <div className="flex-1 min-w-0">
