@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Briefcase, FolderKanban, Award, MessageSquare, Settings, Sparkles } from "lucide-react";
+import { Home, Briefcase, FolderKanban, Award, MessageSquare, Settings, Sparkles, Calendar, Activity, Bell, HelpCircle } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,12 +18,20 @@ import { Button } from "@/components/ui/button";
 const mainItems = [
   { title: "Panel", url: "/dashboard", icon: Home },
   { title: "Projeler", url: "/projects", icon: FolderKanban },
+  { title: "Takvim", url: "/dashboard", icon: Calendar },
+  { title: "Durumlar", url: "/dashboard", icon: Activity },
+  { title: "Bildirimler", url: "/dashboard", icon: Bell },
 ];
 
 const spaceItems = [
   { title: "Çalışmalarım", url: "/dashboard", icon: Briefcase, dot: "bg-pink-500" },
   { title: "Mesajlar", url: "/dashboard", icon: MessageSquare, dot: "bg-blue-500" },
   { title: "Sertifikalar", url: "/dashboard", icon: Award, dot: "bg-amber-500" },
+];
+
+const bottomItems = [
+  { title: "Ayarlar", url: "/dashboard", icon: Settings },
+  { title: "Yardım", url: "/dashboard", icon: HelpCircle },
 ];
 
 export function AppSidebar() {
@@ -82,7 +90,19 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 space-y-2">
+        <SidebarMenu>
+          {bottomItems.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <NavLink to={item.url} className="flex items-center gap-3">
+                  <item.icon className="h-4 w-4" />
+                  {!collapsed && <span>{item.title}</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
         {!collapsed ? (
           <Button className="w-full bg-gradient-to-r from-primary to-blue-500 text-white">
             + Yeni Alan
