@@ -319,6 +319,33 @@ export default function EngagementDetail() {
               </form>
             </Card>
           </TabsContent>
+
+          <TabsContent value="live">
+            <Card className="p-4">
+              <div className="mb-3 flex items-start justify-between gap-3 flex-wrap">
+                <div>
+                  <h3 className="font-semibold">Canlı yayın odası</h3>
+                  <p className="text-xs text-muted-foreground">Öğrenci, mentor ve işletme ortak görüşme odasında buluşur. Aşağıdaki bağlantıyı tarayıcıda açın — kamera/mikrofon izni gerekir.</p>
+                </div>
+                <a
+                  href={`https://meet.jit.si/lovable-${id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Yeni sekmede aç
+                </a>
+              </div>
+              <div className="aspect-video w-full rounded-md overflow-hidden border bg-secondary">
+                <iframe
+                  title="Canlı yayın"
+                  src={`https://meet.jit.si/lovable-${id}#userInfo.displayName=%22${encodeURIComponent(user?.email || "Konuk")}%22`}
+                  allow="camera; microphone; fullscreen; display-capture; autoplay"
+                  className="w-full h-full"
+                />
+              </div>
+            </Card>
+          </TabsContent>
         </Tabs>
       </main>
     </div>
