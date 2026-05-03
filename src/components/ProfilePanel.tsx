@@ -120,7 +120,7 @@ export default function ProfilePanel() {
       </Card>
 
       {/* Sağ — Mentor / İşletme kartı */}
-      <Card className="p-5 border-0 shadow-card text-white bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 overflow-hidden">
+      <Card className="md:col-span-3 p-7 border-0 shadow-card text-white bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 overflow-hidden min-h-[180px] flex items-center">
         {partner ? (
           <div className="flex items-center gap-4">
             <Avatar url={partner.profile.avatar_url} name={partner.profile.full_name} size="xl" />
