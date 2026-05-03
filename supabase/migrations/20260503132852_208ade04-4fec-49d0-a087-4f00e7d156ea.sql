@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN onboarded BOOLEAN NOT NULL DEFAULT false;
