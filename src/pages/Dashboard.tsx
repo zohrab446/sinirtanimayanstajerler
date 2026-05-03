@@ -166,6 +166,19 @@ export default function Dashboard() {
                     <div><Label>Yetkinlikler (virgülle)</Label><Input placeholder="React, SEO" value={form.skills} onChange={(e) => setForm({ ...form, skills: e.target.value })} /></div>
                     <div><Label>Süre (hafta)</Label><Input type="number" min={1} value={form.duration_weeks} onChange={(e) => setForm({ ...form, duration_weeks: Number(e.target.value) })} /></div>
                   </div>
+                  <div>
+                    <Label>Mentor</Label>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      value={form.mentor_id}
+                      onChange={(e) => setForm({ ...form, mentor_id: e.target.value })}
+                    >
+                      <option value="">Mentor seçilmedi (sonra atanabilir)</option>
+                      {mentors.map((m) => (
+                        <option key={m.id} value={m.id}>{m.full_name || m.id.slice(0, 8)}</option>
+                      ))}
+                    </select>
+                  </div>
                   <Button type="submit">Oluştur</Button>
                 </form>
               </Card>
