@@ -81,6 +81,7 @@ export default function Onboarding() {
       country: form.country.trim(),
       timezone: form.timezone.trim(),
       bio: form.bio?.trim() || null,
+      avatar_url: form.avatar_url || null,
       onboarded: true,
     };
     if (role === "student") {
