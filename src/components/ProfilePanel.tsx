@@ -28,7 +28,28 @@ function Avatar({ url, name, size = "lg" }: { url?: string | null; name?: string
 export default function ProfilePanel() {
   const { user, role } = useAuth();
   const [me, setMe] = useState<Profile | null>(null);
-  const [partner, setPartner] = useState<{ profile: Profile; label: string } | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarUpload = async (file: File) => {
+    if (!user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Dosya çok büyük", description: "Maksimum 5MB", variant: "destructive" });
+      return;
+    }
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type });
+    if (upErr) { toast({ title: "Yükleme hatası", description: upErr.message, variant: "destructive" }); setUploading(false); return; }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    const { error: updErr } = await supabase.from("profiles").update({ avatar_url: data.publicUrl }).eq("id", user.id);
+    if (updErr) { toast({ title: "Hata", description: updErr.message, variant: "destructive" }); setUploading(false); return; }
+    setMe((prev) => prev ? { ...prev, avatar_url: data.publicUrl } : prev);
+    toast({ title: "Profil fotoğrafı güncellendi" });
+    setUploading(false);
+  };
+
 
   useEffect(() => {
     if (!user) return;
