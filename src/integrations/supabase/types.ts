@@ -270,6 +270,10 @@ export type Database = {
           engagement_id: string
           id: string
           status: string
+          submission_filename: string | null
+          submission_url: string | null
+          submitted_at: string | null
+          submitted_by: string | null
           title: string
           updated_at: string
         }
@@ -282,6 +286,10 @@ export type Database = {
           engagement_id: string
           id?: string
           status?: string
+          submission_filename?: string | null
+          submission_url?: string | null
+          submitted_at?: string | null
+          submitted_by?: string | null
           title: string
           updated_at?: string
         }
@@ -294,6 +302,10 @@ export type Database = {
           engagement_id?: string
           id?: string
           status?: string
+          submission_filename?: string | null
+          submission_url?: string | null
+          submitted_at?: string | null
+          submitted_by?: string | null
           title?: string
           updated_at?: string
         }
