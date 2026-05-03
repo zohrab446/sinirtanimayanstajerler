@@ -82,9 +82,11 @@ export default function EngagementDetail() {
   };
 
   const uploadSubmission = async (taskId: string, file: File) => {
-    const path = `${id}/${taskId}/${Date.now()}-${file.name}`;
-    const { error: upErr } = await supabase.storage.from("task-submissions").upload(path, file, { upsert: true });
-    if (upErr) { toast({ title: "Yükleme hatası", description: upErr.message, variant: "destructive" }); return; }
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${id}/${taskId}/${Date.now()}-${safeName}`;
+    toast({ title: "Yükleniyor...", description: file.name });
+    const { error: upErr } = await supabase.storage.from("task-submissions").upload(path, file, { upsert: true, contentType: file.type || "application/octet-stream" });
+    if (upErr) { console.error("upload error", upErr); toast({ title: "Yükleme hatası", description: upErr.message, variant: "destructive" }); return; }
     const { error } = await supabase.from("tasks").update({
       submission_url: path, submission_filename: file.name,
       submitted_at: new Date().toISOString(), submitted_by: user!.id,
