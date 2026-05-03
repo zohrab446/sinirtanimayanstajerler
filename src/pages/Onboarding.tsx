@@ -37,8 +37,9 @@ export default function Onboarding() {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     full_name: "", country: "", timezone: "", bio: "",
-    university: "", company_name: "", skills: "",
+    university: "", company_name: "", skills: "", avatar_url: "",
   });
+  const [avatarUploading, setAvatarUploading] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
@@ -57,6 +58,7 @@ export default function Onboarding() {
           university: data.university || "",
           company_name: data.company_name || "",
           skills: (data.skills || []).join(", "),
+          avatar_url: data.avatar_url || "",
         });
       }
     });
@@ -79,6 +81,7 @@ export default function Onboarding() {
       country: form.country.trim(),
       timezone: form.timezone.trim(),
       bio: form.bio?.trim() || null,
+      avatar_url: form.avatar_url || null,
       onboarded: true,
     };
     if (role === "student") {
@@ -100,6 +103,19 @@ export default function Onboarding() {
 
   const set = (k: string) => (e: any) => setForm({ ...form, [k]: e.target.value });
 
+  const uploadAvatar = async (file: File) => {
+    if (!user) return;
+    setAvatarUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast({ title: "Yükleme hatası", description: error.message, variant: "destructive" }); setAvatarUploading(false); return; }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    setForm((f) => ({ ...f, avatar_url: data.publicUrl }));
+    setAvatarUploading(false);
+    toast({ title: "Profil fotoğrafı yüklendi" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -109,6 +125,16 @@ export default function Onboarding() {
 
         <Card className="p-6 shadow-card">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label>Profil Fotoğrafı</Label>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="w-20 h-20 rounded-full bg-secondary border overflow-hidden flex items-center justify-center text-2xl text-muted-foreground">
+                  {form.avatar_url ? <img src={form.avatar_url} alt="" className="w-full h-full object-cover" /> : "👤"}
+                </div>
+                <Input type="file" accept="image/*" disabled={avatarUploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadAvatar(f); }} />
+              </div>
+              {avatarUploading && <p className="text-xs text-muted-foreground mt-1">Yükleniyor...</p>}
+            </div>
             <div><Label>Ad Soyad *</Label><Input required maxLength={100} value={form.full_name} onChange={set("full_name")} /></div>
 
             <div className="grid grid-cols-2 gap-4">
