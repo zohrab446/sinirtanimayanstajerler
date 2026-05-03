@@ -90,7 +90,19 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 space-y-2">
+        <SidebarMenu>
+          {bottomItems.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <NavLink to={item.url} className="flex items-center gap-3">
+                  <item.icon className="h-4 w-4" />
+                  {!collapsed && <span>{item.title}</span>}
+                </NavLink>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
         {!collapsed ? (
           <Button className="w-full bg-gradient-to-r from-primary to-blue-500 text-white">
             + Yeni Alan
