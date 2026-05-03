@@ -223,6 +223,7 @@ export type Database = {
           business_id: string
           category: string | null
           country: string | null
+          cover_url: string | null
           created_at: string
           description: string
           duration_weeks: number | null
@@ -237,6 +238,7 @@ export type Database = {
           business_id: string
           category?: string | null
           country?: string | null
+          cover_url?: string | null
           created_at?: string
           description: string
           duration_weeks?: number | null
@@ -251,6 +253,7 @@ export type Database = {
           business_id?: string
           category?: string | null
           country?: string | null
+          cover_url?: string | null
           created_at?: string
           description?: string
           duration_weeks?: number | null
