@@ -51,6 +51,21 @@ export default function Auth() {
     else navigate("/dashboard");
   };
 
+  const handleGoogle = async () => {
+    setLoading(true);
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/dashboard` });
+    if (result.error) { toast({ title: "Google girişi başarısız", description: (result.error as Error).message, variant: "destructive" }); setLoading(false); }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) { toast({ title: "Önce e-posta gir", variant: "destructive" }); return; }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: "E-posta gönderildi", description: "Şifre sıfırlama bağlantısı için e-postanı kontrol et." });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-card p-4">
       <div className="w-full max-w-md">
