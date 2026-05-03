@@ -53,6 +53,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel>Panel</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
               {mainItems.map((item) => (
