@@ -51,7 +51,7 @@ export default function StatsRow() {
       const submitted = t.filter((x: any) => x.status === "submitted").length;
       setStats([
         { label: "Aktif Görev", value: active, total: t.length, color: "hsl(142 76% 45%)", sub: "Devam eden işler" },
-        { label: "Tamamlanan", value: done, total: t.length, color: "hsl(48 95% 55%)", sub: `${Math.round((done / total) * 100)}% bitirildi` },
+        { label: "Tamamlanan", value: done, total: t.length, color: "hsl(48 95% 55%)", sub: "Bitirilen görevler" },
         { label: "Onay Bekleyen", value: submitted, total: t.length, color: "hsl(330 80% 60%)", sub: "İncelemede" },
       ]);
     })();
