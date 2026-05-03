@@ -24,9 +24,9 @@ const mainItems = [
 ];
 
 const spaceItems = [
-  { title: "Çalışmalarım", url: "/dashboard", icon: Briefcase, dot: "bg-pink-500" },
-  { title: "Mesajlar", url: "/dashboard", icon: MessageSquare, dot: "bg-blue-500" },
-  { title: "Sertifikalar", url: "/dashboard", icon: Award, dot: "bg-amber-500" },
+  { title: "Çalışmalarım", url: "/workspaces", icon: Briefcase, dot: "bg-pink-500" },
+  { title: "Mesajlar", url: "/messages", icon: MessageSquare, dot: "bg-blue-500" },
+  { title: "Sertifikalar", url: "/certificates", icon: Award, dot: "bg-amber-500" },
 ];
 
 const bottomItems = [
