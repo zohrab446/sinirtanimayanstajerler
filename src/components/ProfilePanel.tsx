@@ -120,7 +120,7 @@ export default function ProfilePanel() {
       </Card>
 
       {/* Sağ — Mentor / İşletme kartı */}
-      <Card className="md:col-span-3 p-7 border-0 shadow-card text-white bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 overflow-hidden min-h-[180px] flex items-center">
+      <Card className="p-7 border-0 shadow-card text-white bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 overflow-hidden min-h-[180px] flex items-center">
         {partner ? (
           <div className="flex items-center gap-5 w-full">
             <div className="w-24 h-24 rounded-full bg-white/20 border-2 border-white/40 overflow-hidden flex items-center justify-center font-bold shrink-0 text-3xl">
