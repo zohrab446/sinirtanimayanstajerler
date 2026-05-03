@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,12 +12,39 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Briefcase } from "lucide-react";
 
+type Application = {
+  id: string;
+  status: string;
+  student_id: string;
+  cover_letter: string | null;
+  profiles?: { full_name: string | null; university?: string | null } | null;
+  projects?: { title: string; category: string | null; country: string | null } | null;
+};
+
+type Project = {
+  id: string;
+  title: string;
+  description: string;
+  category: string | null;
+  country: string | null;
+  duration_weeks: number | null;
+  status: string;
+  applications?: Application[] | null;
+};
+
+type Engagement = {
+  id: string;
+  application_id: string;
+  status: string;
+  projects?: { title: string; category: string | null; country: string | null } | null;
+};
+
 export default function Dashboard() {
   const { user, role, loading } = useAuth();
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<any[]>([]);
-  const [applications, setApplications] = useState<any[]>([]);
-  const [engagements, setEngagements] = useState<any[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [engagements, setEngagements] = useState<Engagement[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
 
@@ -28,21 +55,21 @@ export default function Dashboard() {
       .then(({ data }) => { if (data && !data.onboarded) navigate("/onboarding"); });
   }, [user, loading, navigate]);
 
-  const refresh = async () => {
-    if (!user) return;
+  const refresh = useCallback(async () => {
+    if (!user || !role) return;
     if (role === "business") {
       const { data } = await supabase.from("projects").select("*, applications(id, status, student_id, cover_letter, profiles:student_id(full_name, university))").eq("business_id", user.id).order("created_at", { ascending: false });
-      setProjects(data ?? []);
+      setProjects((data ?? []) as Project[]);
     } else if (role === "student") {
       const { data } = await supabase.from("applications").select("*, projects(title, category, country)").eq("student_id", user.id).order("created_at", { ascending: false });
-      setApplications(data ?? []);
+      setApplications((data ?? []) as Application[]);
     }
     const col = role === "business" ? "business_id" : role === "mentor" ? "mentor_id" : "student_id";
     const { data: engs } = await supabase.from("engagements").select("*, projects(title, category, country)").eq(col, user.id).order("created_at", { ascending: false });
-    setEngagements(engs ?? []);
-  };
+    setEngagements((engs ?? []) as Engagement[]);
+  }, [user, role]);
 
-  useEffect(() => { refresh(); }, [user, role]);
+  useEffect(() => { refresh(); }, [refresh]);
 
   const createProject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,21 +163,29 @@ export default function Dashboard() {
                     <p className="text-sm font-semibold mb-2">Başvurular ({p.applications?.length || 0})</p>
                     {p.applications?.length === 0 && <p className="text-xs text-muted-foreground">Henüz başvuru yok</p>}
                     <div className="space-y-2">
-                      {p.applications?.map((a: any) => (
-                        <div key={a.id} className="flex justify-between items-center gap-2 p-3 bg-secondary/40 rounded-md">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium">{a.profiles?.full_name || "Öğrenci"}</p>
-                            <p className="text-xs text-muted-foreground truncate">{a.cover_letter || "-"}</p>
-                          </div>
-                          <Badge variant="outline">{a.status}</Badge>
-                          {a.status === "pending" && (
-                            <div className="flex gap-1">
-                              <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "accepted")}>✓</Button>
-                              <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "rejected")}>✕</Button>
+                      {p.applications?.map((a) => {
+                        const relatedEngagement = engagements.find((e) => e.application_id === a.id);
+                        return (
+                          <div key={a.id} className="flex justify-between items-center gap-2 p-3 bg-secondary/40 rounded-md">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium">{a.profiles?.full_name || "Öğrenci"}</p>
+                              <p className="text-xs text-muted-foreground truncate">{a.cover_letter || "-"}</p>
                             </div>
-                          )}
-                        </div>
-                      ))}
+                            <Badge variant="outline">{a.status}</Badge>
+                            {a.status === "pending" && (
+                              <div className="flex gap-1">
+                                <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "accepted")}>✓</Button>
+                                <Button size="sm" variant="outline" onClick={() => updateAppStatus(a.id, "rejected")}>✕</Button>
+                              </div>
+                            )}
+                            {a.status === "accepted" && relatedEngagement && (
+                              <Link to={`/engagements/${relatedEngagement.id}`}>
+                                <Button size="sm" variant="outline">Görev Ata</Button>
+                              </Link>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </Card>
