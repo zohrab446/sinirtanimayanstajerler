@@ -188,6 +188,11 @@ export default function EngagementDetail() {
               {eng.status === "active" && (user?.id === eng.business_id || user?.id === eng.mentor_id) && (
                 <Button size="sm" variant="outline" className="block mt-2" onClick={completeEngagement}>Tamamla</Button>
               )}
+              {eng.status === "completed" && (
+                <Button size="sm" className="block mt-2 bg-gradient-primary" onClick={generateCertificate}>
+                  <Award className="w-4 h-4" />Sertifikayı İndir
+                </Button>
+              )}
             </div>
           </div>
         </Card>
