@@ -147,7 +147,7 @@ export default function Dashboard() {
                     <div className="flex justify-between items-start gap-3">
                       <div>
                         <h3 className="font-semibold">{e.projects?.title}</h3>
-                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
