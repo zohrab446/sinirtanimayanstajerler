@@ -56,7 +56,7 @@ export default function ProjectDetail() {
           <div className="flex flex-wrap gap-2 mb-4">
             <Badge variant="secondary">{project.category || "Genel"}</Badge>
             <Badge variant="outline" className="flex items-center gap-1"><Clock className="w-3 h-3" />{project.duration_weeks} hafta</Badge>
-            {project.country && <Badge variant="outline" className="flex items-center gap-1"><MapPin className="w-3 h-3" />{project.country}</Badge>}
+            {project.country && <Badge variant="outline" className="flex items-center gap-1"><span>{countryFlag(project.country)}</span>{project.country}</Badge>}
           </div>
           <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
           <p className="text-muted-foreground whitespace-pre-wrap mb-6">{project.description}</p>
