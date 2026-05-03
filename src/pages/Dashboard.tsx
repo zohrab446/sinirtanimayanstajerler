@@ -6,6 +6,7 @@ import AppHeader from "@/components/AppHeader";
 import { AppSidebar } from "@/components/AppSidebar";
 import ActivityHeatmap from "@/components/ActivityHeatmap";
 import StatsRow from "@/components/StatsRow";
+import ProfilePanel from "@/components/ProfilePanel";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
