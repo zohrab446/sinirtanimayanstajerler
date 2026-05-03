@@ -86,9 +86,9 @@ export default function ProfilePanel() {
   }, [user, role]);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 mb-8">
+    <div className="grid gap-4 md:grid-cols-5 mb-8">
       {/* Sol üst — Öğrenci/Kullanıcı kartı */}
-      <Card className="p-5 border-0 shadow-card text-white bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 overflow-hidden">
+      <Card className="md:col-span-2 p-5 border-0 shadow-card text-white bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 overflow-hidden">
         <div className="flex items-center gap-4">
           <div className="relative group">
             <Avatar url={me?.avatar_url} name={me?.full_name} size="xl" />
@@ -120,16 +120,18 @@ export default function ProfilePanel() {
       </Card>
 
       {/* Sağ — Mentor / İşletme kartı */}
-      <Card className="p-5 border-0 shadow-card text-white bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 overflow-hidden">
+      <Card className="md:col-span-3 p-7 border-0 shadow-card text-white bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 overflow-hidden min-h-[180px] flex items-center">
         {partner ? (
-          <div className="flex items-center gap-4">
-            <Avatar url={partner.profile.avatar_url} name={partner.profile.full_name} size="xl" />
+          <div className="flex items-center gap-5 w-full">
+            <div className="w-24 h-24 rounded-full bg-white/20 border-2 border-white/40 overflow-hidden flex items-center justify-center font-bold shrink-0 text-3xl">
+              {partner.profile.avatar_url ? <img src={partner.profile.avatar_url} alt={partner.profile.full_name || ""} className="w-full h-full object-cover" /> : (partner.profile.full_name?.charAt(0).toUpperCase() || "👤")}
+            </div>
             <div className="min-w-0">
               <p className="text-xs uppercase tracking-wider text-white/80">{partner.label}</p>
-              <h2 className="text-lg font-bold truncate">
+              <h2 className="text-2xl font-bold truncate">
                 {partner.profile.company_name || partner.profile.full_name || "—"}
               </h2>
-              <p className="text-xs text-white/80 truncate">{partner.profile.country || partner.profile.bio || ""}</p>
+              <p className="text-sm text-white/80 truncate mt-1">{partner.profile.country || partner.profile.bio || ""}</p>
             </div>
           </div>
         ) : (
