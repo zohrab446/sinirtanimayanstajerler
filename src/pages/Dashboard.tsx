@@ -134,9 +134,20 @@ export default function Dashboard() {
   if (loading || !user) return <div className="min-h-screen bg-background"><AppHeader /></div>;
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <main className="container py-8">
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/40">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <AppHeader />
+          <div className="flex items-center gap-3 px-6 py-3 border-b bg-background/60 backdrop-blur">
+            <SidebarTrigger />
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder="Ara..." className="pl-9 bg-secondary/50 border-0" />
+            </div>
+          </div>
+          <main className="flex-1 p-6 lg:grid lg:grid-cols-[1fr_320px] lg:gap-6">
+            <div className="min-w-0">
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
 
