@@ -194,7 +194,14 @@ export default function EngagementDetail() {
                 <div key={s}>
                   <h4 className="text-sm font-semibold mb-2">{STATUS_LABEL[s]}</h4>
                   <div className="space-y-2 min-h-[100px]">
-                    {tasks.filter((t) => t.status === s).map((t) => {
+                    {tasks.filter((t) => t.status === s).filter((t) => {
+                      const isStudent = user?.id === eng.student_id;
+                      const isBusiness = user?.id === eng.business_id;
+                      const isMentor = user?.id === eng.mentor_id;
+                      if (isBusiness || isMentor) return true;
+                      if (isStudent) return t.assigned_to === user?.id || t.created_by === user?.id;
+                      return false;
+                    }).map((t) => {
                       const isStudent = user?.id === eng.student_id;
                       const isBusiness = user?.id === eng.business_id;
                       const isMentor = user?.id === eng.mentor_id;
