@@ -69,8 +69,23 @@ export default function EngagementDetail() {
   };
 
   const updateTaskStatus = async (taskId: string, status: string) => {
-    await supabase.from("tasks").update({ status }).eq("id", taskId);
+    const { error } = await supabase.from("tasks").update({ status }).eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
   };
+
+  const updateTaskAssignee = async (taskId: string, assigned_to: string) => {
+    const { error } = await supabase.from("tasks")
+      .update({ assigned_to: assigned_to === "none" ? null : assigned_to })
+      .eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: "Görev atandı" });
+  };
+
+  const assigneeOptions = eng ? [
+    { id: eng.student_id, label: `👨‍🎓 ${eng.student?.full_name || "Öğrenci"}` },
+    { id: eng.business_id, label: `🏢 ${eng.business?.company_name || eng.business?.full_name || "İşletme"}` },
+    ...(eng.mentor_id ? [{ id: eng.mentor_id, label: `🎓 Mentor` }] : []),
+  ] : [];
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,15 +144,18 @@ export default function EngagementDetail() {
                   <Input required placeholder="Görev başlığı" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} />
                   <Textarea placeholder="Açıklama" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} />
                   <Input type="date" value={newTask.due_date} onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })} />
-                  <Select value={newTask.assigned_to} onValueChange={(v) => setNewTask({ ...newTask, assigned_to: v })}>
-                    <SelectTrigger><SelectValue placeholder="Kime atansın?" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Atanmadı</SelectItem>
-                      <SelectItem value={eng.student_id}>👨‍🎓 {eng.student?.full_name || "Öğrenci"}</SelectItem>
-                      <SelectItem value={eng.business_id}>🏢 {eng.business?.company_name || eng.business?.full_name || "İşletme"}</SelectItem>
-                      {eng.mentor_id && <SelectItem value={eng.mentor_id}>🎓 Mentor</SelectItem>}
-                    </SelectContent>
-                  </Select>
+                  <div>
+                    <label className="text-xs text-muted-foreground mb-1 block">Kime atansın?</label>
+                    <Select value={newTask.assigned_to} onValueChange={(v) => setNewTask({ ...newTask, assigned_to: v })}>
+                      <SelectTrigger><SelectValue placeholder="Kişi seç" /></SelectTrigger>
+                      <SelectContent className="bg-popover z-50">
+                        <SelectItem value="none">Atanmadı</SelectItem>
+                        {assigneeOptions.map((o) => (
+                          <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Button type="submit" size="sm">Ekle</Button>
                 </form>
               </Card>
@@ -155,8 +173,17 @@ export default function EngagementDetail() {
                         {t.assigned?.full_name && <p className="text-xs text-muted-foreground mt-1">👤 {t.assigned.full_name}</p>}
                         <Select value={t.status} onValueChange={(v) => updateTaskStatus(t.id, v)}>
                           <SelectTrigger className="h-7 text-xs mt-2"><SelectValue /></SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-popover z-50">
                             {STATUSES.map((st) => <SelectItem key={st} value={st}>{STATUS_LABEL[st]}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <Select value={t.assigned_to ?? "none"} onValueChange={(v) => updateTaskAssignee(t.id, v)}>
+                          <SelectTrigger className="h-7 text-xs mt-2"><SelectValue placeholder="Ata" /></SelectTrigger>
+                          <SelectContent className="bg-popover z-50">
+                            <SelectItem value="none">Atanmadı</SelectItem>
+                            {assigneeOptions.map((o) => (
+                              <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </Card>
