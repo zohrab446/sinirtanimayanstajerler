@@ -79,6 +79,17 @@ export default function Dashboard() {
 
   useEffect(() => { refresh(); }, [refresh]);
 
+  useEffect(() => {
+    if (role !== "business") return;
+    (async () => {
+      const { data: roleRows } = await supabase.from("user_roles").select("user_id").eq("role", "mentor");
+      const ids = (roleRows ?? []).map((r: any) => r.user_id);
+      if (ids.length === 0) { setMentors([]); return; }
+      const { data: profs } = await supabase.from("profiles").select("id, full_name").in("id", ids);
+      setMentors((profs ?? []) as any);
+    })();
+  }, [role]);
+
   const createProject = async (e: React.FormEvent) => {
     e.preventDefault();
     const { error } = await supabase.from("projects").insert({
