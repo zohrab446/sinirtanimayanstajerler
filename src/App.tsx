@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Onboarding from "./pages/Onboarding.tsx";
 import EngagementDetail from "./pages/EngagementDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 
 const queryClient = new QueryClient();
 
