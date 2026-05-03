@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
+import { Camera, Loader2 } from "lucide-react";
 
 type Profile = {
   id: string;
@@ -21,6 +23,7 @@ function Avatar({ url, name, size = "lg" }: { url?: string | null; name?: string
     </div>
   );
 }
+
 
 export default function ProfilePanel() {
   const { user, role } = useAuth();
