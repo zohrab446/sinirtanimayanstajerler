@@ -144,15 +144,18 @@ export default function EngagementDetail() {
                   <Input required placeholder="Görev başlığı" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} />
                   <Textarea placeholder="Açıklama" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} />
                   <Input type="date" value={newTask.due_date} onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })} />
-                  <Select value={newTask.assigned_to} onValueChange={(v) => setNewTask({ ...newTask, assigned_to: v })}>
-                    <SelectTrigger><SelectValue placeholder="Kime atansın?" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Atanmadı</SelectItem>
-                      <SelectItem value={eng.student_id}>👨‍🎓 {eng.student?.full_name || "Öğrenci"}</SelectItem>
-                      <SelectItem value={eng.business_id}>🏢 {eng.business?.company_name || eng.business?.full_name || "İşletme"}</SelectItem>
-                      {eng.mentor_id && <SelectItem value={eng.mentor_id}>🎓 Mentor</SelectItem>}
-                    </SelectContent>
-                  </Select>
+                  <div>
+                    <label className="text-xs text-muted-foreground mb-1 block">Kime atansın?</label>
+                    <Select value={newTask.assigned_to} onValueChange={(v) => setNewTask({ ...newTask, assigned_to: v })}>
+                      <SelectTrigger><SelectValue placeholder="Kişi seç" /></SelectTrigger>
+                      <SelectContent className="bg-popover z-50">
+                        <SelectItem value="none">Atanmadı</SelectItem>
+                        {assigneeOptions.map((o) => (
+                          <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Button type="submit" size="sm">Ekle</Button>
                 </form>
               </Card>
