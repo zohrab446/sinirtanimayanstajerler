@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Clock, MapPin } from "lucide-react";
+import { countryFlag } from "@/lib/flag";
 
 export default function ProjectDetail() {
   const { id } = useParams();
