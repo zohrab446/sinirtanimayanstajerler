@@ -11,10 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, Send } from "lucide-react";
+import { ArrowLeft, Plus, Send, Upload, Check, X, FileText } from "lucide-react";
 
-const STATUSES = ["todo", "in_progress", "review", "done"] as const;
-const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", review: "İncelemede", done: "Tamamlandı" };
+const STATUSES = ["todo", "in_progress", "submitted", "done"] as const;
+const STATUS_LABEL: Record<string, string> = { todo: "Yapılacak", in_progress: "Devam ediyor", submitted: "Onay bekliyor", done: "Tamamlandı" };
 
 export default function EngagementDetail() {
   const { id } = useParams();
