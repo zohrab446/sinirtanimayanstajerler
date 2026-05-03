@@ -23,7 +23,7 @@ export default function EngagementDetail() {
   const [eng, setEng] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
-  const [newTask, setNewTask] = useState({ title: "", description: "", due_date: "" });
+  const [newTask, setNewTask] = useState({ title: "", description: "", due_date: "", assigned_to: "none" });
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [msgInput, setMsgInput] = useState("");
   const msgEnd = useRef<HTMLDivElement>(null);
@@ -62,9 +62,10 @@ export default function EngagementDetail() {
     const { error } = await supabase.from("tasks").insert({
       engagement_id: id!, title: newTask.title, description: newTask.description,
       due_date: newTask.due_date || null, created_by: user!.id,
+      assigned_to: newTask.assigned_to !== "none" ? newTask.assigned_to : null,
     });
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
-    else { setNewTask({ title: "", description: "", due_date: "" }); setShowTaskForm(false); }
+    else { setNewTask({ title: "", description: "", due_date: "", assigned_to: "none" }); setShowTaskForm(false); }
   };
 
   const updateTaskStatus = async (taskId: string, status: string) => {
@@ -128,6 +129,15 @@ export default function EngagementDetail() {
                   <Input required placeholder="Görev başlığı" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} />
                   <Textarea placeholder="Açıklama" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} />
                   <Input type="date" value={newTask.due_date} onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })} />
+                  <Select value={newTask.assigned_to} onValueChange={(v) => setNewTask({ ...newTask, assigned_to: v })}>
+                    <SelectTrigger><SelectValue placeholder="Kime atansın?" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Atanmadı</SelectItem>
+                      <SelectItem value={eng.student_id}>👨‍🎓 {eng.student?.full_name || "Öğrenci"}</SelectItem>
+                      <SelectItem value={eng.business_id}>🏢 {eng.business?.company_name || eng.business?.full_name || "İşletme"}</SelectItem>
+                      {eng.mentor_id && <SelectItem value={eng.mentor_id}>🎓 Mentor</SelectItem>}
+                    </SelectContent>
+                  </Select>
                   <Button type="submit" size="sm">Ekle</Button>
                 </form>
               </Card>
@@ -142,6 +152,7 @@ export default function EngagementDetail() {
                         <p className="font-medium text-sm">{t.title}</p>
                         {t.description && <p className="text-xs text-muted-foreground mt-1">{t.description}</p>}
                         {t.due_date && <p className="text-xs text-muted-foreground mt-1">📅 {t.due_date}</p>}
+                        {t.assigned?.full_name && <p className="text-xs text-muted-foreground mt-1">👤 {t.assigned.full_name}</p>}
                         <Select value={t.status} onValueChange={(v) => updateTaskStatus(t.id, v)}>
                           <SelectTrigger className="h-7 text-xs mt-2"><SelectValue /></SelectTrigger>
                           <SelectContent>
