@@ -55,6 +55,8 @@ export default function Dashboard() {
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "", cover_url: "" });
   const [coverUploading, setCoverUploading] = useState(false);
   const [mentors, setMentors] = useState<{ id: string; full_name: string | null }[]>([]);
+  const [upcomingTasks, setUpcomingTasks] = useState<any[]>([]);
+  const [recentMessages, setRecentMessages] = useState<any[]>([]);
 
   useEffect(() => {
     if (loading) return;
@@ -82,6 +84,26 @@ export default function Dashboard() {
   }, [user, role]);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  useEffect(() => {
+    if (engagements.length === 0) { setUpcomingTasks([]); setRecentMessages([]); return; }
+    const ids = engagements.map((e) => e.id);
+    (async () => {
+      const { data: t } = await supabase.from("tasks")
+        .select("id, title, due_date, status, engagement_id")
+        .in("engagement_id", ids)
+        .neq("status", "done")
+        .order("due_date", { ascending: true, nullsFirst: false })
+        .limit(6);
+      setUpcomingTasks(t ?? []);
+      const { data: m } = await supabase.from("messages")
+        .select("id, body, created_at, engagement_id, sender:profiles!messages_sender_profiles_fkey(full_name)")
+        .in("engagement_id", ids)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      setRecentMessages(m ?? []);
+    })();
+  }, [engagements]);
 
   useEffect(() => {
     if (role !== "business") return;
@@ -327,8 +349,50 @@ export default function Dashboard() {
             </div>
             <aside className="hidden lg:block space-y-4">
               <Card className="p-5">
-                <h3 className="font-semibold mb-3 text-sm">Ajanda</h3>
-                <p className="text-xs text-muted-foreground">Yaklaşan görev ve toplantılar burada görünecek.</p>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-sm">Yapılacaklar</h3>
+                  <Badge variant="secondary" className="text-xs">{upcomingTasks.length}</Badge>
+                </div>
+                {upcomingTasks.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Bekleyen görev yok.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {upcomingTasks.map((t) => {
+                      const eng = engagements.find((e) => e.id === t.engagement_id);
+                      return (
+                        <li key={t.id} className="text-xs">
+                          <Link to={`/engagements/${t.engagement_id}`} className="block hover:bg-secondary/50 rounded p-2 -m-1">
+                            <div className="flex items-start gap-2">
+                              <span className={`mt-1 w-1.5 h-1.5 rounded-full shrink-0 ${t.status === "submitted" ? "bg-amber-500" : t.status === "in_progress" ? "bg-blue-500" : "bg-muted-foreground"}`} />
+                              <div className="min-w-0 flex-1">
+                                <p className="font-medium truncate">{t.title}</p>
+                                <p className="text-muted-foreground truncate">{eng?.projects?.title}{t.due_date ? ` · 📅 ${new Date(t.due_date).toLocaleDateString("tr-TR")}` : ""}</p>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </Card>
+
+              <Card className="p-5">
+                <h3 className="font-semibold text-sm mb-3">Son Mesajlar</h3>
+                {recentMessages.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Henüz mesaj yok.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {recentMessages.map((m) => (
+                      <li key={m.id} className="text-xs">
+                        <Link to={`/engagements/${m.engagement_id}`} className="block hover:bg-secondary/50 rounded p-2 -m-1">
+                          <p className="font-medium truncate">{m.sender?.full_name || "Kullanıcı"}</p>
+                          <p className="text-muted-foreground line-clamp-2">{m.body}</p>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </Card>
             </aside>
           </main>
