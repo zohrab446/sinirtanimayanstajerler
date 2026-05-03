@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import AppHeader from "@/components/AppHeader";
 import { AppSidebar } from "@/components/AppSidebar";
+import ActivityHeatmap from "@/components/ActivityHeatmap";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -348,6 +349,7 @@ export default function Dashboard() {
         )}
             </div>
             <aside className="hidden lg:block space-y-4">
+              <ActivityHeatmap />
               <Card className="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-sm">Yapılacaklar</h3>
