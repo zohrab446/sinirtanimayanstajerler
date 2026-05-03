@@ -129,6 +129,15 @@ export default function EngagementDetail() {
                   <Input required placeholder="Görev başlığı" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} />
                   <Textarea placeholder="Açıklama" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })} />
                   <Input type="date" value={newTask.due_date} onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })} />
+                  <Select value={newTask.assigned_to} onValueChange={(v) => setNewTask({ ...newTask, assigned_to: v })}>
+                    <SelectTrigger><SelectValue placeholder="Kime atansın?" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Atanmadı</SelectItem>
+                      <SelectItem value={eng.student_id}>👨‍🎓 {eng.student?.full_name || "Öğrenci"}</SelectItem>
+                      <SelectItem value={eng.business_id}>🏢 {eng.business?.company_name || eng.business?.full_name || "İşletme"}</SelectItem>
+                      {eng.mentor_id && <SelectItem value={eng.mentor_id}>🎓 Mentor</SelectItem>}
+                    </SelectContent>
+                  </Select>
                   <Button type="submit" size="sm">Ekle</Button>
                 </form>
               </Card>
@@ -143,6 +152,7 @@ export default function EngagementDetail() {
                         <p className="font-medium text-sm">{t.title}</p>
                         {t.description && <p className="text-xs text-muted-foreground mt-1">{t.description}</p>}
                         {t.due_date && <p className="text-xs text-muted-foreground mt-1">📅 {t.due_date}</p>}
+                        {t.assigned?.full_name && <p className="text-xs text-muted-foreground mt-1">👤 {t.assigned.full_name}</p>}
                         <Select value={t.status} onValueChange={(v) => updateTaskStatus(t.id, v)}>
                           <SelectTrigger className="h-7 text-xs mt-2"><SelectValue /></SelectTrigger>
                           <SelectContent>
