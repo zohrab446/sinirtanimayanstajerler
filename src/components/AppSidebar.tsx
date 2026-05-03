@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const mainItems = [
-  { title: "Panel", url: "/dashboard", icon: Home },
+  { title: "Ana Sayfa", url: "/dashboard", icon: Home },
   { title: "Projeler", url: "/projects", icon: FolderKanban },
   { title: "Takvim", url: "/dashboard", icon: Calendar },
   { title: "Durumlar", url: "/dashboard", icon: Activity },
