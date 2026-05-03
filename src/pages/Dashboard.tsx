@@ -202,15 +202,23 @@ export default function Dashboard() {
             </div>
             <div className="space-y-3">
               {applications.length === 0 && <Card className="p-8 text-center text-muted-foreground">Henüz başvuru yok. <Link to="/projects" className="text-primary underline">Projelere göz at</Link></Card>}
-              {applications.map((a) => (
-                <Card key={a.id} className="p-5 flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold">{a.projects?.title}</h3>
-                    <p className="text-xs text-muted-foreground">{a.projects?.category} · {a.projects?.country}</p>
-                  </div>
-                  <Badge variant={a.status === "accepted" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>{a.status}</Badge>
-                </Card>
-              ))}
+              {applications.map((a) => {
+                const relatedEngagement = engagements.find((e) => e.application_id === a.id);
+                return (
+                  <Card key={a.id} className="p-5 flex justify-between items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold">{a.projects?.title}</h3>
+                      <p className="text-xs text-muted-foreground">{a.projects?.category} · {a.projects?.country}</p>
+                    </div>
+                    <Badge variant={a.status === "accepted" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>{a.status}</Badge>
+                    {a.status === "accepted" && relatedEngagement && (
+                      <Link to={`/engagements/${relatedEngagement.id}`}>
+                        <Button size="sm" variant="outline">Çalışmaya Git</Button>
+                      </Link>
+                    )}
+                  </Card>
+                );
+              })}
             </div>
           </>
         )}
