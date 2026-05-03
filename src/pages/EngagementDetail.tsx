@@ -197,8 +197,9 @@ export default function EngagementDetail() {
                     {tasks.filter((t) => t.status === s).map((t) => {
                       const isStudent = user?.id === eng.student_id;
                       const isBusiness = user?.id === eng.business_id;
+                      const isMentor = user?.id === eng.mentor_id;
                       const canSubmit = isStudent && (t.status === "todo" || t.status === "in_progress");
-                      const canReview = isBusiness && t.status === "submitted";
+                      const canReview = (isBusiness || isMentor) && t.status === "submitted";
                       return (
                       <Card key={t.id} className="p-3">
                         <p className="font-medium text-sm">{t.title}</p>
