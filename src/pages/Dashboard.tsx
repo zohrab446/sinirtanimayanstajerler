@@ -47,6 +47,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
   const [engagements, setEngagements] = useState<Engagement[]>([]);
+  const [openEngagements, setOpenEngagements] = useState<Engagement[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
 
@@ -69,6 +70,10 @@ export default function Dashboard() {
     const col = role === "business" ? "business_id" : role === "mentor" ? "mentor_id" : "student_id";
     const { data: engs } = await supabase.from("engagements").select("*, projects(title, category, country)").eq(col, user.id).order("created_at", { ascending: false });
     setEngagements((engs ?? []) as Engagement[]);
+    if (role === "mentor") {
+      const { data: open } = await supabase.from("engagements").select("*, projects(title, category, country)").is("mentor_id", null).eq("status", "active").order("created_at", { ascending: false });
+      setOpenEngagements((open ?? []) as Engagement[]);
+    }
   }, [user, role]);
 
   useEffect(() => { refresh(); }, [refresh]);
@@ -229,10 +234,31 @@ export default function Dashboard() {
         )}
 
         {role === "mentor" && (
-          <Card className="p-8 text-center">
-            <h3 className="font-semibold mb-2">Mentor paneli yakında</h3>
-            <p className="text-sm text-muted-foreground">Atandığın takımları burada göreceksin.</p>
-          </Card>
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Mentor arayan çalışmalar ({openEngagements.length})</h2>
+            {openEngagements.length === 0 && (
+              <Card className="p-8 text-center text-muted-foreground">Şu an mentor bekleyen çalışma yok.</Card>
+            )}
+            {openEngagements.map((e) => (
+              <Card key={e.id} className="p-5 flex justify-between items-center gap-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold">{e.projects?.title}</h3>
+                  <p className="text-xs text-muted-foreground">{e.projects?.category} · {e.projects?.country}</p>
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-gradient-primary"
+                  onClick={async () => {
+                    const { error } = await supabase.from("engagements").update({ mentor_id: user!.id }).eq("id", e.id);
+                    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+                    else { toast({ title: "Mentor olarak atandın" }); refresh(); }
+                  }}
+                >
+                  Mentorluk Yap
+                </Button>
+              </Card>
+            ))}
+          </div>
         )}
       </main>
     </div>
