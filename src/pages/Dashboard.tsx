@@ -349,8 +349,50 @@ export default function Dashboard() {
             </div>
             <aside className="hidden lg:block space-y-4">
               <Card className="p-5">
-                <h3 className="font-semibold mb-3 text-sm">Ajanda</h3>
-                <p className="text-xs text-muted-foreground">Yaklaşan görev ve toplantılar burada görünecek.</p>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-sm">Yapılacaklar</h3>
+                  <Badge variant="secondary" className="text-xs">{upcomingTasks.length}</Badge>
+                </div>
+                {upcomingTasks.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Bekleyen görev yok.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {upcomingTasks.map((t) => {
+                      const eng = engagements.find((e) => e.id === t.engagement_id);
+                      return (
+                        <li key={t.id} className="text-xs">
+                          <Link to={`/engagements/${t.engagement_id}`} className="block hover:bg-secondary/50 rounded p-2 -m-1">
+                            <div className="flex items-start gap-2">
+                              <span className={`mt-1 w-1.5 h-1.5 rounded-full shrink-0 ${t.status === "submitted" ? "bg-amber-500" : t.status === "in_progress" ? "bg-blue-500" : "bg-muted-foreground"}`} />
+                              <div className="min-w-0 flex-1">
+                                <p className="font-medium truncate">{t.title}</p>
+                                <p className="text-muted-foreground truncate">{eng?.projects?.title}{t.due_date ? ` · 📅 ${new Date(t.due_date).toLocaleDateString("tr-TR")}` : ""}</p>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </Card>
+
+              <Card className="p-5">
+                <h3 className="font-semibold text-sm mb-3">Son Mesajlar</h3>
+                {recentMessages.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">Henüz mesaj yok.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {recentMessages.map((m) => (
+                      <li key={m.id} className="text-xs">
+                        <Link to={`/engagements/${m.engagement_id}`} className="block hover:bg-secondary/50 rounded p-2 -m-1">
+                          <p className="font-medium truncate">{m.sender?.full_name || "Kullanıcı"}</p>
+                          <p className="text-muted-foreground line-clamp-2">{m.body}</p>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </Card>
             </aside>
           </main>
