@@ -176,6 +176,7 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold mb-2">Paneliniz</h1>
         <p className="text-muted-foreground mb-8 capitalize">Rol: {role || "tanımsız"}</p>
 
+        <ProfilePanel />
         <StatsRow />
 
         {engagements.length > 0 && (
