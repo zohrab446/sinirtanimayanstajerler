@@ -103,6 +103,19 @@ export default function Onboarding() {
 
   const set = (k: string) => (e: any) => setForm({ ...form, [k]: e.target.value });
 
+  const uploadAvatar = async (file: File) => {
+    if (!user) return;
+    setAvatarUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast({ title: "Yükleme hatası", description: error.message, variant: "destructive" }); setAvatarUploading(false); return; }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    setForm((f) => ({ ...f, avatar_url: data.publicUrl }));
+    setAvatarUploading(false);
+    toast({ title: "Profil fotoğrafı yüklendi" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
