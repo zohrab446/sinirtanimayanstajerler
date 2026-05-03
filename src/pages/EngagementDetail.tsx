@@ -81,6 +81,33 @@ export default function EngagementDetail() {
     else toast({ title: "Görev atandı" });
   };
 
+  const uploadSubmission = async (taskId: string, file: File) => {
+    const path = `${id}/${taskId}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await supabase.storage.from("task-submissions").upload(path, file, { upsert: true });
+    if (upErr) { toast({ title: "Yükleme hatası", description: upErr.message, variant: "destructive" }); return; }
+    const { error } = await supabase.from("tasks").update({
+      submission_url: path, submission_filename: file.name,
+      submitted_at: new Date().toISOString(), submitted_by: user!.id,
+      status: "submitted",
+    }).eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: "Dosya gönderildi, onay bekleniyor" });
+  };
+
+  const downloadSubmission = async (path: string, filename: string) => {
+    const { data, error } = await supabase.storage.from("task-submissions").createSignedUrl(path, 60);
+    if (error || !data) { toast({ title: "Hata", description: error?.message, variant: "destructive" }); return; }
+    window.open(data.signedUrl, "_blank");
+  };
+
+  const reviewTask = async (taskId: string, approve: boolean) => {
+    const { error } = await supabase.from("tasks")
+      .update({ status: approve ? "done" : "in_progress" })
+      .eq("id", taskId);
+    if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
+    else toast({ title: approve ? "Görev onaylandı" : "Görev reddedildi, revizyon istendi" });
+  };
+
   const assigneeOptions = eng ? [
     { id: eng.student_id, label: `👨‍🎓 ${eng.student?.full_name || "Öğrenci"}` },
     { id: eng.business_id, label: `🏢 ${eng.business?.company_name || eng.business?.full_name || "İşletme"}` },
