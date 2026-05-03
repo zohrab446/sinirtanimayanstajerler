@@ -82,6 +82,7 @@ export default function ProjectDetail() {
               </div>
             )}
           </div>
+          </div>
         </Card>
       </main>
     </div>
