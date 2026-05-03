@@ -86,7 +86,7 @@ export default function ProfilePanel() {
   }, [user, role]);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 mb-8">
+    <div className="grid gap-4 mb-8">
       {/* Sol — Kullanıcı kartı */}
       <Card className="p-7 border-0 shadow-card text-white bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 overflow-hidden min-h-[180px] flex items-center">
         <div className="flex items-center gap-4">
