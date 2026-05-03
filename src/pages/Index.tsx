@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import {
   GraduationCap, Building2, UserCheck, Shield, Sparkles, Target, MessageSquare,
   Award, BarChart3, Globe2, Zap, Users, Briefcase, ArrowRight, CheckCircle2,
@@ -47,7 +48,8 @@ const Index = () => {
             <a href="#business" className="hover:text-foreground transition-smooth">İş Modeli</a>
             <a href="#mvp" className="hover:text-foreground transition-smooth">MVP</a>
           </nav>
-          <Button size="sm" className="bg-gradient-primary border-0 shadow-glow">Demo İste</Button>
+          <Link to="/projects"><Button variant="ghost" size="sm">Projeler</Button></Link>
+          <Link to="/auth"><Button size="sm" className="bg-gradient-primary border-0 shadow-glow">Giriş / Kayıt</Button></Link>
         </div>
       </header>
 
@@ -67,12 +69,12 @@ const Index = () => {
             beceri-bazlı eşleştirme ve aktif danışmanlık platformu.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 border-0">
+            <Link to="/auth"><Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 border-0">
               Hemen Başla <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-              Kurucu Sunumu
-            </Button>
+            </Button></Link>
+            <Link to="/projects"><Button size="lg" variant="outline" className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              Projelere Göz At
+            </Button></Link>
           </div>
           <div className="grid grid-cols-3 gap-6 mt-16 max-w-xl">
             {[["50+", "Pilot ülke hedefi"], ["10K", "Öğrenci kapasitesi"], ["1K+", "KOBİ ağı"]].map(([n, l]) => (
@@ -381,7 +383,7 @@ const Index = () => {
               <div className="text-sm text-muted-foreground">Hedef pilot</div>
               <div className="font-semibold">100 öğrenci · 30 KOBİ · 10 mentor · 25 tamamlanan proje</div>
             </div>
-            <Button size="lg" className="bg-gradient-primary border-0 shadow-glow">Pilota Katıl <ArrowRight className="ml-2 w-4 h-4" /></Button>
+            <Link to="/auth"><Button size="lg" className="bg-gradient-primary border-0 shadow-glow">Pilota Katıl <ArrowRight className="ml-2 w-4 h-4" /></Button></Link>
           </div>
         </Card>
       </Section>
