@@ -37,8 +37,9 @@ export default function Onboarding() {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     full_name: "", country: "", timezone: "", bio: "",
-    university: "", company_name: "", skills: "",
+    university: "", company_name: "", skills: "", avatar_url: "",
   });
+  const [avatarUploading, setAvatarUploading] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
