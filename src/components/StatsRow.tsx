@@ -6,18 +6,18 @@ import { Card } from "@/components/ui/card";
 type Stat = { label: string; value: number; total: number; color: string; sub: string };
 
 function Ring({ percent, color }: { percent: number; color: string }) {
-  const r = 24;
+  const r = 26;
   const c = 2 * Math.PI * r;
   const offset = c - (percent / 100) * c;
   return (
-    <svg width="60" height="60" viewBox="0 0 60 60" className="shrink-0">
-      <circle cx="30" cy="30" r={r} stroke="rgba(255,255,255,0.25)" strokeWidth="5" fill="none" />
+    <svg width="68" height="68" viewBox="0 0 68 68" className="shrink-0">
+      <circle cx="34" cy="34" r={r} stroke="rgba(255,255,255,0.25)" strokeWidth="5" fill="none" />
       <circle
-        cx="30" cy="30" r={r} stroke={color} strokeWidth="5" fill="none"
+        cx="34" cy="34" r={r} stroke={color} strokeWidth="5" fill="none"
         strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
-        transform="rotate(-90 30 30)"
+        transform="rotate(-90 34 34)"
       />
-      <text x="30" y="34" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">
+      <text x="34" y="38" textAnchor="middle" fill="white" fontSize="13" fontWeight="700">
         {percent}%
       </text>
     </svg>
@@ -67,13 +67,16 @@ export default function StatsRow() {
           "bg-gradient-to-br from-cyan-400 to-teal-500",
         ];
         return (
-          <Card key={s.label} className={`p-5 flex items-center justify-between gap-3 text-white border-0 shadow-card overflow-hidden ${gradients[i]}`}>
+          <Card key={s.label} className={`p-5 flex items-center justify-between gap-4 text-white border-0 shadow-card overflow-hidden ${gradients[i]}`}>
             <div className="min-w-0 flex-1">
-              <p className="font-semibold text-sm">{s.label}</p>
-              <p className="text-3xl font-bold mt-1 leading-none">{s.value}<span className="text-sm text-white/70 font-normal">/{s.total}</span></p>
+              <p className="font-semibold text-sm truncate">{s.label}</p>
+              <p className="text-2xl font-bold mt-1 leading-none">
+                {s.value}
+                <span className="text-sm text-white/70 font-normal ml-0.5">/{s.total}</span>
+              </p>
               <p className="text-xs text-white/80 mt-2 truncate">{s.sub}</p>
             </div>
-            <div className="bg-white/15 rounded-full p-1 shrink-0">
+            <div className="shrink-0">
               <Ring percent={pct} color="white" />
             </div>
           </Card>
