@@ -49,7 +49,8 @@ export default function Dashboard() {
   const [engagements, setEngagements] = useState<Engagement[]>([]);
   const [openEngagements, setOpenEngagements] = useState<Engagement[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
+  const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "", cover_url: "" });
+  const [coverUploading, setCoverUploading] = useState(false);
   const [mentors, setMentors] = useState<{ id: string; full_name: string | null }[]>([]);
 
   useEffect(() => {
@@ -98,13 +99,27 @@ export default function Dashboard() {
       skills_needed: form.skills.split(",").map(s => s.trim()).filter(Boolean),
       duration_weeks: Number(form.duration_weeks), country: form.country,
       mentor_id: form.mentor_id || null,
+      cover_url: form.cover_url || null,
     });
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
     else {
       toast({ title: "Proje oluşturuldu" });
-      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
+      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "", cover_url: "" });
       setShowForm(false); refresh();
     }
+  };
+
+  const uploadCover = async (file: File) => {
+    if (!user) return;
+    setCoverUploading(true);
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${user.id}/${Date.now()}-${safeName}`;
+    const { error } = await supabase.storage.from("project-covers").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast({ title: "Yükleme hatası", description: error.message, variant: "destructive" }); setCoverUploading(false); return; }
+    const { data } = supabase.storage.from("project-covers").getPublicUrl(path);
+    setForm((f) => ({ ...f, cover_url: data.publicUrl }));
+    setCoverUploading(false);
+    toast({ title: "Kapak yüklendi" });
   };
 
   const updateAppStatus = async (appId: string, status: string) => {
@@ -179,6 +194,12 @@ export default function Dashboard() {
                       ))}
                     </select>
                   </div>
+                  <div>
+                    <Label>Kapak Fotoğrafı</Label>
+                    {form.cover_url && <img src={form.cover_url} alt="" className="w-full h-32 object-cover rounded-md mb-2" />}
+                    <Input type="file" accept="image/*" disabled={coverUploading} onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadCover(f); }} />
+                    {coverUploading && <p className="text-xs text-muted-foreground mt-1">Yükleniyor...</p>}
+                  </div>
                   <Button type="submit">Oluştur</Button>
                 </form>
               </Card>
@@ -187,14 +208,18 @@ export default function Dashboard() {
             <div className="space-y-4">
               {projects.length === 0 && <Card className="p-8 text-center text-muted-foreground"><Briefcase className="w-10 h-10 mx-auto mb-2" />Henüz proje yok</Card>}
               {projects.map((p) => (
-                <Card key={p.id} className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-bold text-lg">{p.title}</h3>
-                      <p className="text-sm text-muted-foreground">{p.category} · {p.country} · {p.duration_weeks}h</p>
+                <Card key={p.id} className="overflow-hidden">
+                  {(p as any).cover_url && (
+                    <img src={(p as any).cover_url} alt={p.title} className="w-full h-40 object-cover" />
+                  )}
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-bold text-lg">{p.title}</h3>
+                        <p className="text-sm text-muted-foreground">{p.category} · {p.country} · {p.duration_weeks}h</p>
+                      </div>
+                      <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
                     </div>
-                    <Badge variant={p.status === "open" ? "default" : "secondary"}>{p.status}</Badge>
-                  </div>
                   <div className="border-t pt-3 mt-3">
                     <p className="text-sm font-semibold mb-2">Başvurular ({p.applications?.length || 0})</p>
                     {p.applications?.length === 0 && <p className="text-xs text-muted-foreground">Henüz başvuru yok</p>}
@@ -223,6 +248,7 @@ export default function Dashboard() {
                         );
                       })}
                     </div>
+                  </div>
                   </div>
                 </Card>
               ))}
