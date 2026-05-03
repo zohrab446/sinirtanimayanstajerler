@@ -99,13 +99,27 @@ export default function Dashboard() {
       skills_needed: form.skills.split(",").map(s => s.trim()).filter(Boolean),
       duration_weeks: Number(form.duration_weeks), country: form.country,
       mentor_id: form.mentor_id || null,
+      cover_url: form.cover_url || null,
     });
     if (error) toast({ title: "Hata", description: error.message, variant: "destructive" });
     else {
       toast({ title: "Proje oluşturuldu" });
-      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "" });
+      setForm({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "", mentor_id: "", cover_url: "" });
       setShowForm(false); refresh();
     }
+  };
+
+  const uploadCover = async (file: File) => {
+    if (!user) return;
+    setCoverUploading(true);
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${user.id}/${Date.now()}-${safeName}`;
+    const { error } = await supabase.storage.from("project-covers").upload(path, file, { upsert: true, contentType: file.type });
+    if (error) { toast({ title: "Yükleme hatası", description: error.message, variant: "destructive" }); setCoverUploading(false); return; }
+    const { data } = supabase.storage.from("project-covers").getPublicUrl(path);
+    setForm((f) => ({ ...f, cover_url: data.publicUrl }));
+    setCoverUploading(false);
+    toast({ title: "Kapak yüklendi" });
   };
 
   const updateAppStatus = async (appId: string, status: string) => {
