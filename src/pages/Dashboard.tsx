@@ -17,6 +17,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [engagements, setEngagements] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", category: "", skills: "", duration_weeks: 4, country: "" });
 
