@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Briefcase, FolderKanban, Award, MessageSquare, Settings, Sparkles, Calendar, Activity, Bell, HelpCircle } from "lucide-react";
+import { Home, Briefcase, FolderKanban, Award, MessageSquare, Settings, Sparkles, Calendar, Activity, Bell, HelpCircle, Video } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
