@@ -69,7 +69,9 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} className="flex items-center gap-3">
-                      <span className={`w-2 h-2 rounded-full ${item.dot}`} />
+                      <span className={`w-6 h-6 rounded-md flex items-center justify-center text-white ${item.dot}`}>
+                        <item.icon className="w-3.5 h-3.5" />
+                      </span>
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
