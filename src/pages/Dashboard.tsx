@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Briefcase } from "lucide-react";
+import { countryFlag } from "@/lib/flag";
 
 type Application = {
   id: string;
