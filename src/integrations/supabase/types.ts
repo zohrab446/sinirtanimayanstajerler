@@ -58,6 +58,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          onboarded: boolean
           skills: string[] | null
           timezone: string | null
           university: string | null
@@ -71,6 +72,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          onboarded?: boolean
           skills?: string[] | null
           timezone?: string | null
           university?: string | null
@@ -84,6 +86,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          onboarded?: boolean
           skills?: string[] | null
           timezone?: string | null
           university?: string | null
