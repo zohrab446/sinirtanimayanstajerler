@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Briefcase, Search, Crown } from "lucide-react";
+import { Plus, Briefcase, Search } from "lucide-react";
 import { countryFlag } from "@/lib/flag";
 
 type Application = {
@@ -157,19 +157,17 @@ export default function Dashboard() {
             <div className="grid gap-3 md:grid-cols-2">
               {engagements.map((e) => (
                 <Card key={e.id} className="p-4 hover:border-primary transition-colors">
-                    <div className="flex justify-between items-start gap-3">
-                      <div>
-                        <h3 className="font-semibold">{e.projects?.title}</h3>
-                        <p className="text-xs text-muted-foreground">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={e.status === "active" ? "default" : "secondary"}>{e.status}</Badge>
-                        <Link to={`/engagements/${e.id}`}>
-                          <Button size="sm" variant="outline">Çalışmaya Git</Button>
-                        </Link>
-                      </div>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold leading-tight break-words">{e.projects?.title}</h3>
+                      <Badge variant={e.status === "active" ? "default" : "secondary"} className="shrink-0">{e.status}</Badge>
                     </div>
-                  </Card>
+                    <p className="text-xs text-muted-foreground break-words">{e.projects?.category} · {countryFlag(e.projects?.country)} {e.projects?.country}</p>
+                    <Link to={`/engagements/${e.id}`} className="self-start">
+                      <Button size="sm" variant="outline">Çalışmaya Git</Button>
+                    </Link>
+                  </div>
+                </Card>
               ))}
             </div>
           </div>
@@ -328,14 +326,6 @@ export default function Dashboard() {
         )}
             </div>
             <aside className="hidden lg:block space-y-4">
-              <Card className="p-5 bg-gradient-to-br from-purple-500 via-violet-500 to-indigo-500 text-white border-0 shadow-lg">
-                <div className="flex flex-col items-center text-center">
-                  <Crown className="w-12 h-12 mb-3 text-amber-200" />
-                  <h3 className="font-semibold mb-1">Daha iyi bir çalışma alanı</h3>
-                  <p className="text-xs text-white/80 mb-4">Pro ile sınırsız proje, mentor ve sertifika</p>
-                  <Button variant="secondary" className="w-full bg-white text-purple-700 hover:bg-white/90">Şimdi Yükselt</Button>
-                </div>
-              </Card>
               <Card className="p-5">
                 <h3 className="font-semibold mb-3 text-sm">Ajanda</h3>
                 <p className="text-xs text-muted-foreground">Yaklaşan görev ve toplantılar burada görünecek.</p>
