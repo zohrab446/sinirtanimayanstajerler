@@ -86,9 +86,9 @@ export default function ProfilePanel() {
   }, [user, role]);
 
   return (
-    <div className="grid gap-4 md:grid-cols-5 mb-8">
-      {/* Sol üst — Öğrenci/Kullanıcı kartı */}
-      <Card className="md:col-span-2 p-5 border-0 shadow-card text-white bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 overflow-hidden">
+    <div className="grid gap-4 md:grid-cols-2 mb-8">
+      {/* Sol — Kullanıcı kartı */}
+      <Card className="p-7 border-0 shadow-card text-white bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500 overflow-hidden min-h-[180px] flex items-center">
         <div className="flex items-center gap-4">
           <div className="relative group">
             <Avatar url={me?.avatar_url} name={me?.full_name} size="xl" />
